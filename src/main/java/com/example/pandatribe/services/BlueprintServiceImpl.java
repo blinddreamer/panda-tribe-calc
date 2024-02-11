@@ -1,12 +1,12 @@
-package com.example.panda2.services;
+package com.example.pandatribe.services;
 
-import com.example.panda2.models.*;
-import com.example.panda2.models.dtos.BlueprintDto;
-import com.example.panda2.models.dtos.MaterialDto;
-import com.example.panda2.models.dtos.SearchDto;
-import com.example.panda2.repositories.interfaces.EveTypesRepository;
-import com.example.panda2.services.contracts.BlueprintService;
-import com.example.panda2.services.contracts.MaterialService;
+import com.example.pandatribe.models.*;
+import com.example.pandatribe.models.dtos.BlueprintDto;
+import com.example.pandatribe.models.dtos.MaterialDto;
+import com.example.pandatribe.models.dtos.SearchDto;
+import com.example.pandatribe.repositories.interfaces.EveTypesRepository;
+import com.example.pandatribe.services.contracts.BlueprintService;
+import com.example.pandatribe.services.contracts.MaterialService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

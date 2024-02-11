@@ -1,6 +1,6 @@
-package com.example.panda2.repositories.interfaces;
+package com.example.pandatribe.repositories.interfaces;
 
-import com.example.panda2.models.EveType;
+import com.example.pandatribe.models.EveType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

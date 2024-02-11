@@ -1,6 +1,6 @@
-package com.example.panda2.services.contracts;
+package com.example.pandatribe.services.contracts;
 
-import com.example.panda2.models.dtos.MaterialDto;
+import com.example.pandatribe.models.dtos.MaterialDto;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.panda2.hibernate;
+package com.example.pandatribe.hibernate;
 
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl;

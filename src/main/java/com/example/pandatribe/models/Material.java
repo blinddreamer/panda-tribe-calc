@@ -1,4 +1,4 @@
-package com.example.panda2.models;
+package com.example.pandatribe.models;
 
 import jakarta.persistence.*;
 import lombok.Data;

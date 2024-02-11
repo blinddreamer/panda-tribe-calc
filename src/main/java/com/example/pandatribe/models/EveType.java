@@ -1,12 +1,9 @@
-package com.example.panda2.models;
+package com.example.pandatribe.models;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity

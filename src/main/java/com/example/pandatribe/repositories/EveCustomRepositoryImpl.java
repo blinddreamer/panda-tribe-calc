@@ -1,6 +1,6 @@
-package com.example.panda2.repositories;
+package com.example.pandatribe.repositories;
 
-import com.example.panda2.repositories.interfaces.EveCustomRepository;
+import com.example.pandatribe.repositories.interfaces.EveCustomRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;

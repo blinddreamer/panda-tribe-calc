@@ -1,4 +1,4 @@
-package com.example.panda2.repositories.interfaces;
+package com.example.pandatribe.repositories.interfaces;
 
 import java.util.List;
 

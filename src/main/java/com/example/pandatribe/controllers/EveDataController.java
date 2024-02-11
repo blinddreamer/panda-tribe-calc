@@ -1,9 +1,9 @@
-package com.example.panda2.controllers;
+package com.example.pandatribe.controllers;
 
 
-import com.example.panda2.models.dtos.BlueprintDto;
-import com.example.panda2.models.dtos.SearchDto;
-import com.example.panda2.services.contracts.BlueprintService;
+import com.example.pandatribe.models.dtos.BlueprintDto;
+import com.example.pandatribe.models.dtos.SearchDto;
+import com.example.pandatribe.services.contracts.BlueprintService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
