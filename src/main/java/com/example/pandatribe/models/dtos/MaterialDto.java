@@ -11,5 +11,5 @@ public class MaterialDto {
     private String name;
     private Integer neededQuantity;
     private Integer jobsCount;
-    private List<MaterialDto> subMaterials;
+    private Boolean subMaterials;
 }
