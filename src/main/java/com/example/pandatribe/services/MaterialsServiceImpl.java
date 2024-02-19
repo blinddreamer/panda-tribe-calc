@@ -36,7 +36,6 @@ public class MaterialsServiceImpl implements MaterialService {
             if (eveType.isEmpty()){
                 continue;
             }
-          //  Integer materialBaseQuantity = getQuantityDiscount(material.getQuantity(),discountBR, discountBP, discountB);
             Integer matBlueprintId=0;
             Double craftQuantity=1.0;
            List<Object[]> blueprints = eveCustomRepository.getBluePrintCraftQuantity(eveType.get().getTypeId());
@@ -53,20 +52,17 @@ public class MaterialsServiceImpl implements MaterialService {
 
             Optional<EveType> materialBlueprint = eveTypesRepository.findEveTypeByTypeId(matBlueprintId);
             if (materialBlueprint.isEmpty() || materialBlueprint.get().getTypeId()==0){
+                materialDto.subMaterials(Boolean.FALSE);
                 materialDtoList.add(materialDto.build());
                 continue;
             }
-            materialDto.subMaterials(getMaterialsByActivity(materialBlueprint.get().getTypeId(),
-                    jobsCount,0.0,0,0));
+            materialDto.subMaterials(Boolean.TRUE);
             materialDtoList.add(materialDto.build());
         }
         return materialDtoList;
     }
 
     private Integer getQuantityDiscount(BigDecimal initialQuantity, Double discountBR, Integer discountBP, Integer discountB) {
-//        initialQuantity = (int)Math.ceil(initialQuantity - initialQuantity*(discountBP/100.0));
-//        initialQuantity-= (int)Math.ceil(initialQuantity*(discountBR/100));
-//        initialQuantity-= (int)Math.ceil(initialQuantity*(discountB/100.0));
         initialQuantity =  initialQuantity.subtract(initialQuantity.multiply(BigDecimal.valueOf(discountBP/100.0)));
         initialQuantity = initialQuantity.subtract(initialQuantity.multiply(BigDecimal.valueOf(discountBR/100.0)));
         initialQuantity = initialQuantity.subtract(initialQuantity.multiply(BigDecimal.valueOf(discountB/100.0)));

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class SearchDto {
-    private String shipName;
+    private String blueprintName;
     private Integer quantity;
     private Integer blueprintMe;
     private Integer blueprintTe;
