@@ -4,5 +4,5 @@ import com.example.pandatribe.models.dtos.BlueprintDto;
 import com.example.pandatribe.models.dtos.SearchDto;
 
 public interface BlueprintService {
-    BlueprintDto generateConstructionData(SearchDto searchDto);
+    BlueprintDto getBlueprintData(SearchDto searchDto);
 }
