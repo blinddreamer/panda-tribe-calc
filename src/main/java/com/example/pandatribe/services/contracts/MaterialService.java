@@ -6,5 +6,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface MaterialService {
-    List<MaterialDto> getMaterialsByActivity(Integer blueprintId, Integer quantity, Double discountBR, Integer discountBP, Integer discountB);
+    List<MaterialDto> getMaterialsByActivity(Integer blueprintId, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB,
+                                             Double security);
 }

@@ -15,6 +15,7 @@ public class MaterialDto {
     private Integer jobsCount;
     private BigDecimal sellPrice;
     private BigDecimal craftPrice;
+    private BigDecimal adjustedPrice;
     private Boolean subMaterials;
     private Double volume;
 }

@@ -1,7 +1,7 @@
 package com.example.pandatribe.repositories.interfaces;
 
-import com.example.pandatribe.models.MaterialBlueprintKey;
-import com.example.pandatribe.models.Material;
+import com.example.pandatribe.models.industry.blueprints.MaterialBlueprintKey;
+import com.example.pandatribe.models.industry.blueprints.Material;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

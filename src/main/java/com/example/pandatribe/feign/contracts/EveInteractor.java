@@ -1,13 +1,18 @@
 package com.example.pandatribe.feign.contracts;
 
-import com.example.pandatribe.models.ItemPrice;
-import com.example.pandatribe.models.MarketPriceData;
-import com.example.pandatribe.models.TokenRequest;
-import com.example.pandatribe.models.TokenResponse;
+import com.example.pandatribe.models.industry.SystemCostIndexes;
+import com.example.pandatribe.models.market.ItemPrice;
+import com.example.pandatribe.models.market.MarketPriceData;
+import com.example.pandatribe.models.authentication.TokenRequest;
+import com.example.pandatribe.models.authentication.TokenResponse;
 
 import java.util.List;
 
 public interface EveInteractor {
     TokenResponse requestAccessToken(TokenRequest request);
-    List<ItemPrice> getMarketPrices(Integer regionId, String dataSource, String orderType, Integer typeId);
+    List<ItemPrice> getItemMarketPrice(Integer regionId, String dataSource, String orderType, Integer typeId);
+
+    List<MarketPriceData> getMarketPrices();
+
+    List<SystemCostIndexes> getSystemCostIndexes();
 }

@@ -1,4 +1,4 @@
-package com.example.pandatribe.models;
+package com.example.pandatribe.models.market;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

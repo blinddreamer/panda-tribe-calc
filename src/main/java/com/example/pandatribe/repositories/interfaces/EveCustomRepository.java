@@ -1,7 +1,10 @@
 package com.example.pandatribe.repositories.interfaces;
 
-import java.util.List;
+import com.example.pandatribe.models.industry.blueprints.BlueprintActivity;
+import com.example.pandatribe.models.universe.SystemInfo;
 
 public interface EveCustomRepository {
-    List<Object[]> getBluePrintCraftQuantity(Integer blueprintId);
+    BlueprintActivity getBluePrintInfo(Integer blueprintId);
+    SystemInfo getSystemId(String systemName);
+    Integer getVolume(Integer typeId);
 }

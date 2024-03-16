@@ -1,14 +1,29 @@
 package com.example.pandatribe.utils;
 
+import com.example.pandatribe.models.industry.BuildingBonus;
+import com.example.pandatribe.models.industry.RigBonus;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class Helper {
+
+    private final HashMap<Integer, BuildingBonus> buildingBonuses = new HashMap<>() {{
+        put(0, BuildingBonus.builder().costReduction(0).materialReduction(0).build());
+        put(1, BuildingBonus.builder().costReduction(4).materialReduction(1).build());
+        put(2, BuildingBonus.builder().costReduction(3).materialReduction(1).build());
+        put(3, BuildingBonus.builder().costReduction(5).materialReduction(1).build());
+    }};
+    private final HashMap<Integer, RigBonus> rigBonuses = new HashMap() {{
+        put(0, RigBonus.builder().materialReduction(0.0).highSecMultiplier(1.0).lowSecMultiplier(1.9).nullSecMultiplier(2.1).build());
+        put(1, RigBonus.builder().materialReduction(2.0).highSecMultiplier(1.0).lowSecMultiplier(1.9).nullSecMultiplier(2.1).build());
+        put(2, RigBonus.builder().materialReduction(2.4).highSecMultiplier(1.0).lowSecMultiplier(1.9).nullSecMultiplier(2.1).build());
+    }};
 
     public String getCodes() {
         String codeVerifier = generateRandomCodeVerifier();
@@ -23,6 +38,13 @@ public class Helper {
         return String.format("https://images.evetech.net/types/%d/icon?size=32",typeId);
     }
 
+    public BuildingBonus getBuildingBonus(Integer index){
+        return buildingBonuses.get(index);
+    }
+
+    public RigBonus getRigBonus(Integer index){
+        return rigBonuses.get(index);
+    }
     private String generateRandomCodeVerifier() {
         byte[] randomBytes = new byte[32]; // 256 bits
         ThreadLocalRandom.current().nextBytes(randomBytes);
