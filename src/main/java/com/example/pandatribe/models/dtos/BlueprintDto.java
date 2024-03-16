@@ -14,6 +14,5 @@ public class BlueprintDto {
     private String icon;
     private BigDecimal craftPrice;
     private BigDecimal sellPrice;
-    private Boolean isCreatable;
-    private List<BlueprintDto> materialsList;
+    private List<MaterialDto> materialsList;
 }
