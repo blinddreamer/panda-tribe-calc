@@ -49,8 +49,10 @@ public class BlueprintServiceImpl implements BlueprintService {
         }
         BlueprintActivity blueprintActivity = eveCustomRepository.getBluePrintInfo(eveType.get().getTypeId());
         if(Objects.nonNull(blueprintActivity)) {
-            SystemInfo systemInfo = eveCustomRepository.getSystemId(system);
-
+            SystemInfo systemInfo = eveCustomRepository.getSystemInfo(system);
+        if(Objects.isNull(systemInfo)){
+            systemInfo = eveCustomRepository.getSystemInfo("Jita");
+        }
             Integer  matBlueprintId = blueprintActivity.getBlueprintId();
             List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, quantity, discountBR, materialEfficiency, discountB, systemInfo.getSecurity());
             String activity = blueprintActivity.getActivityId().equals(11) ? "reaction" : "manufacturing";

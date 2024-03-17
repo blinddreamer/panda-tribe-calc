@@ -28,10 +28,10 @@ public class EveCustomRepositoryImpl implements EveCustomRepository {
                         .build();
     }
 
-    public SystemInfo getSystemId(String systemName){
+    public SystemInfo getSystemInfo(String systemName){
         String nativeQuery = "SELECT \"solarSystemID\", \"security\" FROM evesde.\"mapSolarSystems\" mss WHERE mss.\"solarSystemName\" = :systemName";
         List<Object[]> result = entityManager.createNativeQuery(nativeQuery).setParameter("systemName",systemName).getResultList();
-        return result.isEmpty() ? SystemInfo.builder().build() : SystemInfo.builder().systemId((Integer) result.get(0)[0]).security((Double) result.get(0)[1]).build();
+        return result.isEmpty() ? null : SystemInfo.builder().systemId((Integer) result.get(0)[0]).security((Double) result.get(0)[1]).build();
     }
 
     public Integer getVolume(Integer typeId){

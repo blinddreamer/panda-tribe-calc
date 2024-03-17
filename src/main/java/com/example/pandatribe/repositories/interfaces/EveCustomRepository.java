@@ -5,6 +5,6 @@ import com.example.pandatribe.models.universe.SystemInfo;
 
 public interface EveCustomRepository {
     BlueprintActivity getBluePrintInfo(Integer blueprintId);
-    SystemInfo getSystemId(String systemName);
+    SystemInfo getSystemInfo(String systemName);
     Integer getVolume(Integer typeId);
 }
