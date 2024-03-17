@@ -1,11 +1,11 @@
 package com.example.pandatribe.services;
 
+import com.example.pandatribe.models.dtos.BlueprintResult;
 import com.example.pandatribe.models.industry.BuildingBonus;
 import com.example.pandatribe.models.industry.RigBonus;
 import com.example.pandatribe.models.industry.blueprints.BlueprintActivity;
 import com.example.pandatribe.models.industry.blueprints.EveType;
 import com.example.pandatribe.models.market.ItemPrice;
-import com.example.pandatribe.models.dtos.MaterialDto;
 import com.example.pandatribe.models.industry.blueprints.Material;
 import com.example.pandatribe.models.market.MarketPriceData;
 import com.example.pandatribe.repositories.interfaces.EveCustomRepository;
@@ -36,13 +36,13 @@ public class MaterialsServiceImpl implements MaterialService {
 
 
     @Override
-    public List<MaterialDto> getMaterialsByActivity(Integer blueprintId, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB, Double security) {
+    public List<BlueprintResult> getMaterialsByActivity(Integer blueprintId, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB, Double security) {
         List<Material> materials = materialBlueprintRepository.findMaterialsByActivity(blueprintId);
         return getSimpleMaterials(materials, quantity, discountBR, materialEfficiency, discountB, security);
     }
 
-    private List<MaterialDto> getSimpleMaterials(List<Material> materials, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB, Double security) {
-        List<MaterialDto> materialDtoList = new ArrayList<>();
+    private List<BlueprintResult> getSimpleMaterials(List<Material> materials, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB, Double security) {
+        List<BlueprintResult> materialList = new ArrayList<>();
         RigBonus rigBonus = helper.getRigBonus(discountBR);
         BuildingBonus buildingBonus = helper.getBuildingBonus(discountB);
         List<MarketPriceData> marketPriceData = marketService.getMarketPriceData();
@@ -56,14 +56,14 @@ public class MaterialsServiceImpl implements MaterialService {
 
             BlueprintActivity blueprintActivity = eveCustomRepository.getBluePrintInfo(eveType.get().getTypeId());
             Integer volume = eveCustomRepository.getVolume(eveType.get().getTypeId());
-            Double craftQuantity = Optional.ofNullable(blueprintActivity).map(b -> Double.parseDouble(b.getCraftQuantity().toString())).orElse(0.0);
+            Double craftQuantity = Optional.ofNullable(blueprintActivity).map(b -> Double.parseDouble(b.getCraftQuantity().toString())).orElse(1.0);
             Integer matQuantity = getQuantityDiscount(BigDecimal.valueOf(material.getQuantity() * quantity), rigBonus.getMaterialReduction() * rigMultiplier, materialEfficiency, buildingBonus.getMaterialReduction());
             Integer jobsCount = Objects.nonNull(blueprintActivity) ? (int) Math.ceil(matQuantity / craftQuantity) : null;
-            MaterialDto.MaterialDtoBuilder materialDto = MaterialDto.builder()
+            BlueprintResult.BlueprintResultBuilder materialDto = BlueprintResult.builder()
                     .name(eveType.get().getTypeName())
-                    .neededQuantity(matQuantity)
+                    .quantity(matQuantity)
                     .icon(helper.generateIconLink(eveType.get().getTypeId()))
-                    .sellPrice(marketService.getItemPrice(LOCATION_ID, marketItemPriceData).multiply(BigDecimal.valueOf(matQuantity)))
+                    .sellPrice(marketService.getItemPrice(LOCATION_ID, marketItemPriceData).multiply(BigDecimal.valueOf(Objects.nonNull(jobsCount)? jobsCount : matQuantity)))
                     .volume(Objects.nonNull(volume) ? volume : eveType.get().getVolume() * matQuantity)
                     .adjustedPrice(marketPriceData.stream()
                             .filter(m-> m.getTypeId().equals(eveType.get().getTypeId()))
@@ -73,15 +73,15 @@ public class MaterialsServiceImpl implements MaterialService {
                     .jobsCount(jobsCount);
 
             if (Objects.isNull(blueprintActivity)) {
-                materialDto.subMaterials(Boolean.FALSE);
-                materialDtoList.add(materialDto.build());
+                materialDto.isCreatable(Boolean.FALSE);
+                materialList.add(materialDto.build());
                 continue;
             }
             Boolean skip = reactions ? blueprintActivity.getActivityId() == 11 ? true : false : false;
-            materialDto.subMaterials(skip ? Boolean.FALSE : Boolean.TRUE);
-            materialDtoList.add(materialDto.build());
+            materialDto.isCreatable(skip ? Boolean.FALSE : Boolean.TRUE);
+            materialList.add(materialDto.build());
         }
-        return materialDtoList;
+        return materialList;
     }
 
     private Integer getQuantityDiscount(BigDecimal initialQuantity, Double discountBR, Integer discountBP, Integer discountB) {

@@ -1,8 +1,8 @@
 package com.example.pandatribe.controllers;
 
 
-import com.example.pandatribe.models.dtos.BlueprintDto;
 import com.example.pandatribe.models.dtos.BlueprintRequest;
+import com.example.pandatribe.models.dtos.BlueprintResult;
 import com.example.pandatribe.services.contracts.BlueprintService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class EveDataController {
     @PostMapping("/api/v1/type")
     @Cacheable("cacheCalculator")
     public ResponseEntity<?> getEveType(@RequestBody BlueprintRequest blueprintRequest){
-        BlueprintDto blueprintDto = blueprintService.getBlueprintData(blueprintRequest);
+        BlueprintResult blueprintDto = blueprintService.getBlueprintData(blueprintRequest);
         LOGGER.info("Received request for: " + blueprintRequest);
         if(Objects.isNull(blueprintDto)){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blueprint not found");

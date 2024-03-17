@@ -14,7 +14,7 @@ import java.util.List;
 public class IndustryServiceImpl implements IndustryService {
     private final EveInteractor eveInteractor;
     @Override
-    @Cacheable("costIndexes")
+    @Cacheable("cacheCostIndexes")
     public List<SystemCostIndexes> getSystemCostIndexes() {
       return eveInteractor.getSystemCostIndexes();
     }

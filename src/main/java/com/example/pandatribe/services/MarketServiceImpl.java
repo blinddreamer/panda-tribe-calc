@@ -37,7 +37,7 @@ public class MarketServiceImpl implements MarketService {
     }
 
     @Override
-    @Cacheable("marketPrices")
+    @Cacheable("cacheMarketPrices")
     public List<MarketPriceData> getMarketPriceData(){
         return eveInteractor.getMarketPrices();
     }

@@ -8,15 +8,16 @@ import java.util.List;
 
 @Data
 @Builder
-public class CommonDto {
+public class BlueprintResult {
     private String name;
     private Integer quantity;
     private Integer jobsCount;
     private String icon;
     private BigDecimal craftPrice;
     private BigDecimal sellPrice;
-    private List<MaterialDto> materialsList;
+    private List<BlueprintResult> materialsList;
     private BigDecimal adjustedPrice;
     private Boolean subMaterials;
     private Double volume;
+    private Boolean isCreatable;
 }

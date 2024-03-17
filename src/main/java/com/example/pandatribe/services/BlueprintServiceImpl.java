@@ -1,13 +1,10 @@
 package com.example.pandatribe.services;
 
-import com.example.pandatribe.models.dtos.BlueprintDto;
-import com.example.pandatribe.models.dtos.MaterialDto;
+import com.example.pandatribe.models.dtos.BlueprintResult;
 import com.example.pandatribe.models.dtos.BlueprintRequest;
 import com.example.pandatribe.models.industry.CostIndex;
-import com.example.pandatribe.models.industry.SystemCostIndexes;
 import com.example.pandatribe.models.industry.blueprints.BlueprintActivity;
 import com.example.pandatribe.models.industry.blueprints.EveType;
-import com.example.pandatribe.models.market.MarketPriceData;
 import com.example.pandatribe.models.universe.SystemInfo;
 import com.example.pandatribe.repositories.interfaces.EveCustomRepository;
 import com.example.pandatribe.repositories.interfaces.EveTypesRepository;
@@ -38,7 +35,7 @@ public class BlueprintServiceImpl implements BlueprintService {
 
 
     @Override
-    public BlueprintDto getBlueprintData(BlueprintRequest blueprintRequest){
+    public BlueprintResult getBlueprintData(BlueprintRequest blueprintRequest){
         Integer quantity = Optional.ofNullable(blueprintRequest.getQuantity()).orElse(1);
         Integer materialEfficiency = Optional.ofNullable(blueprintRequest.getBlueprintMe()).orElse(0);
         Integer discountBR = Optional.ofNullable(blueprintRequest.getBuildingRig()).orElse(0);
@@ -55,15 +52,18 @@ public class BlueprintServiceImpl implements BlueprintService {
             SystemInfo systemInfo = eveCustomRepository.getSystemId(system);
 
             Integer  matBlueprintId = blueprintActivity.getBlueprintId();
-            List<MaterialDto> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, quantity, discountBR, materialEfficiency, discountB, systemInfo.getSecurity());
+            List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, quantity, discountBR, materialEfficiency, discountB, systemInfo.getSecurity());
             String activity = blueprintActivity.getActivityId().equals(11) ? "reaction" : "manufacturing";
             BigDecimal industryCosts = calculateIndustryTaxes(facilityTax, systemInfo.getSystemId(), materialsList, activity, discountB);
-            return BlueprintDto.builder()
-                    .blueprintName(blueprintName)
+            BigDecimal materialPrice = materialsList.stream()
+                    .map(mat-> mat.getSellPrice())
+                    .reduce(BigDecimal.ZERO,BigDecimal::add);
+            return BlueprintResult.builder()
+                    .name(blueprintName)
                     .quantity(quantity)
                     .materialsList(materialsList)
                     .icon(helper.generateIconLink(eveType.get().getTypeId()))
-                    .craftPrice(materialsList.stream().map(MaterialDto::getSellPrice).reduce(BigDecimal.ZERO,BigDecimal::add).add(industryCosts))
+                    .craftPrice(industryCosts.add(materialPrice))
                     .sellPrice(marketService.getItemPrice(LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId())).multiply(BigDecimal.valueOf(quantity)))
                     .build();
 
@@ -71,8 +71,8 @@ public class BlueprintServiceImpl implements BlueprintService {
        return null;
     }
 
-    private BigDecimal calculateIndustryTaxes(Double facilityTax, Integer systemId, List<MaterialDto> materials, String activity, Integer buildingIndex){
-        BigDecimal eiv = materials.stream().map(MaterialDto::getAdjustedPrice).reduce(BigDecimal.ZERO,BigDecimal::add);
+    private BigDecimal calculateIndustryTaxes(Double facilityTax, Integer systemId, List<BlueprintResult> materials, String activity, Integer buildingIndex){
+        BigDecimal eiv = materials.stream().map(BlueprintResult::getAdjustedPrice).reduce(BigDecimal.ZERO,BigDecimal::add);
         Integer buildingBonus = helper.getBuildingBonus(buildingIndex).getCostReduction();
         Double surcharge = 4.0;
         Double costIndex = industryService.getSystemCostIndexes().stream()
@@ -82,7 +82,7 @@ public class BlueprintServiceImpl implements BlueprintService {
                 .findFirst()
                 .map(CostIndex::getCostIndex)
                 .orElse(0.0);
-        BigDecimal price = eiv.multiply(BigDecimal.valueOf(costIndex));
+        BigDecimal price = eiv.multiply(BigDecimal.valueOf(costIndex)).setScale(0, RoundingMode.CEILING);
         price = price.subtract(price.multiply(BigDecimal.valueOf(buildingBonus/100)));
         price = price.add(eiv.multiply(BigDecimal.valueOf(facilityTax/100)));
         price = price.add(eiv.multiply(BigDecimal.valueOf(surcharge/100)));
