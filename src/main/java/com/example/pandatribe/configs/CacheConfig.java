@@ -10,12 +10,27 @@ import org.springframework.stereotype.Component;
 public class CacheConfig {
 private static final Logger LOGGER = LoggerFactory.getLogger(CacheConfig.class);
     @CacheEvict(cacheNames = "cacheCalculator", allEntries = true)
-    public void evictCache(){
-        LOGGER.info("Cache was cleared");
+    public void evictCacheCalculator(){
+        LOGGER.info("Cache cacheCalculator was cleared");
     }
 
-    @Scheduled(fixedRate = 900_000) // 15 minutes = 900,000 milliseconds
-    public void triggerEvictCache(){
-        evictCache();
+    @CacheEvict(cacheNames = "cacheMarketPrices", allEntries = true)
+    public void evictCacheMarketPrices(){
+        LOGGER.info("Cache cacheMarketPrices was cleared");
     }
+
+    @CacheEvict(cacheNames = "cacheCostIndexes",allEntries = true)
+    public void evictCacheCostIndexes(){LOGGER.info("Cache cacheCostIndexes was cleared");}
+
+    @Scheduled(fixedRate = 900_000) // 15 minutes = 900,000 milliseconds
+    public void triggerEvictCacheCalculator(){
+        evictCacheCalculator();
+    }
+
+    @Scheduled(cron = "0 0 * * * *") // 15 minutes = 900,000 milliseconds
+    public void triggerEvictCache(){
+        evictCacheMarketPrices();
+        evictCacheCostIndexes();
+    }
+
 }

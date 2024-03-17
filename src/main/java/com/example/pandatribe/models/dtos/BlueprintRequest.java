@@ -2,12 +2,15 @@ package com.example.pandatribe.models.dtos;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
-public class SearchDto {
+public class BlueprintRequest {
     private String blueprintName;
     private Integer quantity;
     private Integer blueprintMe;
-//    private Integer blueprintTe;
-    private Double buildingRig;
+    private String system;
+    private Double facilityTax;
+    private Integer buildingRig;
     private Integer building;
 }

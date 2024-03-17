@@ -2,10 +2,11 @@ package com.example.pandatribe.feign;
 
 import com.example.pandatribe.feign.contracts.EveApiList;
 import com.example.pandatribe.feign.contracts.EveInteractor;
-import com.example.pandatribe.models.ItemPrice;
-import com.example.pandatribe.models.MarketPriceData;
-import com.example.pandatribe.models.TokenRequest;
-import com.example.pandatribe.models.TokenResponse;
+import com.example.pandatribe.models.industry.SystemCostIndexes;
+import com.example.pandatribe.models.market.ItemPrice;
+import com.example.pandatribe.models.market.MarketPriceData;
+import com.example.pandatribe.models.authentication.TokenRequest;
+import com.example.pandatribe.models.authentication.TokenResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +27,20 @@ public class EveInteractorImpl implements EveInteractor {
     }
 
     @Override
-    public List<ItemPrice> getMarketPrices(Integer regionId, String dataSource, String orderType, Integer typeId) {
+    public List<ItemPrice> getItemMarketPrice(Integer regionId, String dataSource, String orderType, Integer typeId) {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("datasource",dataSource);
         queryParams.put("order_type",orderType);
         queryParams.put("type_id",typeId);
         return feign.getRestClient(EveApiList.class,API_ADDRESS).getMarketData(regionId, queryParams);
+    }
+
+    public List<MarketPriceData> getMarketPrices(){
+        return feign.getRestClient(EveApiList.class,API_ADDRESS).getMarketPrices();
+    }
+
+    @Override
+    public List<SystemCostIndexes> getSystemCostIndexes() {
+        return feign.getRestClient(EveApiList.class, API_ADDRESS).getSystemCostIndexes();
     }
 }

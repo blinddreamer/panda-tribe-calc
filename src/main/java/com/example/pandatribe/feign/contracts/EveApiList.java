@@ -1,14 +1,13 @@
 package com.example.pandatribe.feign.contracts;
 
-import com.example.pandatribe.models.ItemPrice;
-import com.example.pandatribe.models.MarketPriceData;
-import com.example.pandatribe.models.TokenResponse;
+import com.example.pandatribe.models.industry.SystemCostIndexes;
+import com.example.pandatribe.models.market.ItemPrice;
+import com.example.pandatribe.models.market.MarketPriceData;
+import com.example.pandatribe.models.authentication.TokenResponse;
 import feign.Headers;
 import feign.Param;
 import feign.QueryMap;
 import feign.RequestLine;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -23,4 +22,10 @@ public interface EveApiList {
 
     @RequestLine("GET /markets/{regionId}/orders/?datasource={dataSource}&order_type={orderType}&type_id={typeId}")
     List<ItemPrice> getMarketData(@Param("regionId") Integer regionId, @QueryMap Map<String,Object> queryParams);
+
+    @RequestLine("GET /markets/prices")
+    List<MarketPriceData> getMarketPrices();
+
+    @RequestLine("GET /industry/systems")
+    List<SystemCostIndexes> getSystemCostIndexes();
 }

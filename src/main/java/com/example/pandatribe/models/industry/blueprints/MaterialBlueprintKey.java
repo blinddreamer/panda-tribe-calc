@@ -1,4 +1,4 @@
-package com.example.pandatribe.models;
+package com.example.pandatribe.models.industry.blueprints;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
