@@ -1,7 +1,6 @@
 package com.example.pandatribe.services;
 
-import com.example.pandatribe.models.dtos.BlueprintResult;
-import com.example.pandatribe.models.dtos.BlueprintRequest;
+import com.example.pandatribe.models.dtos.*;
 import com.example.pandatribe.models.industry.CostIndex;
 import com.example.pandatribe.models.industry.blueprints.BlueprintActivity;
 import com.example.pandatribe.models.industry.blueprints.EveType;
@@ -21,6 +20,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -47,7 +47,7 @@ public class BlueprintServiceImpl implements BlueprintService {
         if (eveType.isEmpty()){
             return null;
         }
-        BlueprintActivity blueprintActivity = eveCustomRepository.getBluePrintInfo(eveType.get().getTypeId());
+        BlueprintActivity blueprintActivity = eveCustomRepository.getBluePrintInfoByProduct(eveType.get().getTypeId());
         if(Objects.nonNull(blueprintActivity)) {
             SystemInfo systemInfo = eveCustomRepository.getSystemInfo(system);
         if(Objects.isNull(systemInfo)){
@@ -71,6 +71,19 @@ public class BlueprintServiceImpl implements BlueprintService {
 
         }
        return null;
+    }
+
+    @Override
+    public GetBlueprintsResult getEveBlueprints() {
+        GetBlueprintsResult result =  GetBlueprintsResult.builder()
+                .blueprints(eveCustomRepository.getBlueprints().stream().filter(bp-> Objects.nonNull(bp.getBlueprint())).collect(Collectors.toList()))
+                .build();
+        return result;
+    }
+
+    @Override
+    public List<SystemName> getEveSystems() {
+        return eveCustomRepository.getSystems();
     }
 
     private BigDecimal calculateIndustryTaxes(Double facilityTax, Integer systemId, List<BlueprintResult> materials, String activity, Integer buildingIndex){
