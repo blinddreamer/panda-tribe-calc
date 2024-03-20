@@ -1,8 +1,10 @@
 package com.example.pandatribe.controllers;
 
 
-import com.example.pandatribe.models.dtos.*;
-import com.example.pandatribe.models.universe.SystemInfo;
+import com.example.pandatribe.models.dtos.BlueprintRequest;
+import com.example.pandatribe.models.dtos.BlueprintResult;
+import com.example.pandatribe.models.dtos.GetBlueprintsResult;
+import com.example.pandatribe.models.dtos.SystemName;
 import com.example.pandatribe.services.contracts.BlueprintService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

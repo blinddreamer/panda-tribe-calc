@@ -63,7 +63,7 @@ public class MaterialsServiceImpl implements MaterialService {
                     .name(eveType.get().getTypeName())
                     .quantity(matQuantity)
                     .icon(helper.generateIconLink(eveType.get().getTypeId()))
-                    .sellPrice(marketService.getItemPrice(LOCATION_ID, marketItemPriceData).multiply(BigDecimal.valueOf(Objects.nonNull(jobsCount)? jobsCount : matQuantity)))
+                    .sellPrice(marketService.getItemPrice(LOCATION_ID, marketItemPriceData).multiply(BigDecimal.valueOf(matQuantity)))
                     .volume(Objects.nonNull(volume) ? volume : eveType.get().getVolume() * matQuantity)
                     .adjustedPrice(marketPriceData.stream()
                             .filter(m-> m.getTypeId().equals(eveType.get().getTypeId()))
