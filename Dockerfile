@@ -1,3 +1,7 @@
+FROM postgres:latest
+
+COPY postgres-20240302-TRANQUILITY.dmp /docker-entrypoint-initdb.d/
+
 FROM maven:3.8.5-openjdk-17-slim AS builder
 
 WORKDIR /app
