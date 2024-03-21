@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface MaterialService {
     List<BlueprintResult> getMaterialsByActivity(Integer blueprintId, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB,
-                                                 Double security);
+                                                 Double security, Integer blueprintCount);
 }

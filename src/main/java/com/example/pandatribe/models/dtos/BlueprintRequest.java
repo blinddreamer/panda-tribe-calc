@@ -13,4 +13,5 @@ public class BlueprintRequest {
     private Double facilityTax;
     private Integer buildingRig;
     private Integer building;
+    private Integer jobRuns;
 }

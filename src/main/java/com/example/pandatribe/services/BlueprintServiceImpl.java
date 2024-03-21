@@ -43,6 +43,7 @@ public class BlueprintServiceImpl implements BlueprintService {
         String system = Optional.ofNullable(blueprintRequest.getSystem()).filter(s -> !s.isEmpty()).orElse("Jita");
         Double facilityTax = Optional.ofNullable(blueprintRequest.getFacilityTax()).orElse(0.0);
         String blueprintName = blueprintRequest.getBlueprintName();
+        Integer jobRuns = Optional.ofNullable(blueprintRequest.getJobRuns()).orElse(1);
         Optional<EveType> eveType = repository.findEveTypeByTypeName(blueprintName);
         if (eveType.isEmpty()){
             return null;
@@ -54,7 +55,7 @@ public class BlueprintServiceImpl implements BlueprintService {
             systemInfo = eveCustomRepository.getSystemInfo("Jita");
         }
             Integer  matBlueprintId = blueprintActivity.getBlueprintId();
-            List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, quantity, discountBR, materialEfficiency, discountB, systemInfo.getSecurity());
+            List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, quantity, discountBR, materialEfficiency, discountB, systemInfo.getSecurity(), jobRuns);
             String activity = blueprintActivity.getActivityId().equals(11) ? "reaction" : "manufacturing";
             BigDecimal industryCosts = calculateIndustryTaxes(facilityTax, systemInfo.getSystemId(), materialsList, activity, discountB);
             BigDecimal materialPrice = materialsList.stream()

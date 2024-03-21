@@ -20,8 +20,8 @@ import java.util.Objects;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/")
-public class EveDataController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EveDataController.class);
+public class EveBlueprintController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EveBlueprintController.class);
     private final BlueprintService blueprintService;
 
     @PostMapping("type")
