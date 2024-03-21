@@ -63,11 +63,14 @@ public class BlueprintServiceImpl implements BlueprintService {
                     .reduce(BigDecimal.ZERO,BigDecimal::add);
             return BlueprintResult.builder()
                     .name(blueprintName)
-                    .quantity(quantity)
+                    .quantity(quantity* jobRuns)
                     .materialsList(materialsList)
                     .icon(helper.generateIconLink(eveType.get().getTypeId()))
                     .craftPrice(industryCosts.add(materialPrice))
-                    .sellPrice(marketService.getItemPrice(LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId())).multiply(BigDecimal.valueOf(quantity)))
+                    .sellPrice(marketService
+                            .getItemPrice(LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId()))
+                            .multiply(BigDecimal.valueOf(quantity))
+                            .multiply(BigDecimal.valueOf(jobRuns)))
                     .build();
 
         }
