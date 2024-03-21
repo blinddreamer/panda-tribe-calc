@@ -17,7 +17,6 @@ public class BlueprintResult {
     private BigDecimal sellPrice;
     private List<BlueprintResult> materialsList;
     private BigDecimal adjustedPrice;
-    private Boolean subMaterials;
     private Double volume;
     private Boolean isCreatable;
 }

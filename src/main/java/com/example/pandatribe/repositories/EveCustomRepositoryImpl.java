@@ -3,6 +3,8 @@ package com.example.pandatribe.repositories;
 import com.example.pandatribe.models.dtos.Blueprint;
 import com.example.pandatribe.models.dtos.SystemName;
 import com.example.pandatribe.models.industry.blueprints.BlueprintActivity;
+import com.example.pandatribe.models.universe.Region;
+import com.example.pandatribe.models.universe.Station;
 import com.example.pandatribe.models.universe.SystemInfo;
 import com.example.pandatribe.repositories.interfaces.EveCustomRepository;
 import jakarta.persistence.EntityManager;
@@ -64,6 +66,23 @@ public class EveCustomRepositoryImpl implements EveCustomRepository {
         List<Object> result = entityManager.createNativeQuery(nativeQuery).getResultList();
         return result.stream().map(id-> Blueprint.builder().blueprint(getBlueprintName((Integer) id)).build()).collect(Collectors.toList());
     }
+
+    @Override
+    public List<Region> getRegions() {
+        String nativeQuery = "SELECT \"regionID\", \"regionName\" FROM evesde.\"mapRegions\"";
+        List<Object[]> result = entityManager.createNativeQuery(nativeQuery).getResultList();
+        return result.stream().map(region -> Region.builder().regionId((Integer) region[0]).regionName((String) region[1]).build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Station> getStations() {
+        String nativeQuery = "SELECT \"stationID\", \"stationName\" FROM evesde.\"staStations\"";
+        List<Object[]> result = entityManager.createNativeQuery(nativeQuery).getResultList();
+        return result.stream().map(station -> Station.builder().stationId((Integer) station[0]).stationName((String) station[1]).build())
+                .collect(Collectors.toList());
+    }
+
     private String getBlueprintName(Integer id){
         String nativeQuery = "SELECT \"typeName\" FROM evesde.\"invTypes\" it WHERE it.\"typeID\" = :id";
         List<Object> result = entityManager.createNativeQuery(nativeQuery).setParameter("id",id).getResultList();

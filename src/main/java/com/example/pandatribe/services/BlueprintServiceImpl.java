@@ -54,15 +54,18 @@ public class BlueprintServiceImpl implements BlueprintService {
         if(Objects.isNull(systemInfo)){
             systemInfo = eveCustomRepository.getSystemInfo("Jita");
         }
+            Integer volume = eveCustomRepository.getVolume(eveType.get().getTypeId());
             Integer  matBlueprintId = blueprintActivity.getBlueprintId();
             List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, quantity, discountBR, materialEfficiency, discountB, systemInfo.getSecurity(), jobRuns);
             String activity = blueprintActivity.getActivityId().equals(11) ? "reaction" : "manufacturing";
             BigDecimal industryCosts = calculateIndustryTaxes(facilityTax, systemInfo.getSystemId(), materialsList, activity, discountB);
             BigDecimal materialPrice = materialsList.stream()
-                    .map(mat-> mat.getSellPrice())
+                    .map(BlueprintResult::getSellPrice)
                     .reduce(BigDecimal.ZERO,BigDecimal::add);
             return BlueprintResult.builder()
                     .name(blueprintName)
+                    .volume((Objects.nonNull(volume)? volume : eveType.get().getVolume()) * quantity *jobRuns)
+                    .isCreatable(Boolean.TRUE)
                     .quantity(quantity* jobRuns)
                     .materialsList(materialsList)
                     .icon(helper.generateIconLink(eveType.get().getTypeId()))
