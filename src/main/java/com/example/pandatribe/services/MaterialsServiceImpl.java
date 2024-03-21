@@ -36,12 +36,12 @@ public class MaterialsServiceImpl implements MaterialService {
 
 
     @Override
-    public List<BlueprintResult> getMaterialsByActivity(Integer blueprintId, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB, Double security) {
+    public List<BlueprintResult> getMaterialsByActivity(Integer blueprintId, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB, Double security, Integer blueprintCount) {
         List<Material> materials = materialBlueprintRepository.findMaterialsByActivity(blueprintId);
-        return getSimpleMaterials(materials, quantity, discountBR, materialEfficiency, discountB, security);
+        return getSimpleMaterials(materials, quantity, discountBR, materialEfficiency, discountB, security, blueprintCount);
     }
 
-    private List<BlueprintResult> getSimpleMaterials(List<Material> materials, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB, Double security) {
+    private List<BlueprintResult> getSimpleMaterials(List<Material> materials, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB, Double security, Integer blueprintCount) {
         List<BlueprintResult> materialList = new ArrayList<>();
         RigBonus rigBonus = helper.getRigBonus(discountBR);
         BuildingBonus buildingBonus = helper.getBuildingBonus(discountB);
@@ -57,7 +57,7 @@ public class MaterialsServiceImpl implements MaterialService {
             BlueprintActivity blueprintActivity = eveCustomRepository.getBluePrintInfoByProduct(eveType.get().getTypeId());
             Integer volume = eveCustomRepository.getVolume(eveType.get().getTypeId());
             Double craftQuantity = Optional.ofNullable(blueprintActivity).map(b -> Double.parseDouble(b.getCraftQuantity().toString())).orElse(1.0);
-            Integer matQuantity = getQuantityDiscount(BigDecimal.valueOf(material.getQuantity() * quantity), rigBonus.getMaterialReduction() * rigMultiplier, materialEfficiency, buildingBonus.getMaterialReduction());
+            Integer matQuantity = getQuantityDiscount(BigDecimal.valueOf(material.getQuantity() * quantity), rigBonus.getMaterialReduction() * rigMultiplier, materialEfficiency, buildingBonus.getMaterialReduction()) * blueprintCount;
             Integer jobsCount = Objects.nonNull(blueprintActivity) ? (int) Math.ceil(matQuantity / craftQuantity) : null;
             BlueprintResult.BlueprintResultBuilder materialDto = BlueprintResult.builder()
                     .name(eveType.get().getTypeName())

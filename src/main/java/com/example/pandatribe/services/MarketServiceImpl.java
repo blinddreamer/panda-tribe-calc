@@ -32,6 +32,7 @@ public class MarketServiceImpl implements MarketService {
         return itemPriceList.stream()
                 .filter(itemPrice -> Objects.equals(itemPrice.getLocationId(), systemId))
                 .map(ItemPrice::getPrice)
+                .sorted()
                 .findFirst().orElse(BigDecimal.ZERO);
 
     }
