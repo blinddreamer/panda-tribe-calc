@@ -1,4 +1,4 @@
-package com.example.pandatribe.models.dtos;
+package com.example.pandatribe.models.results;
 
 import lombok.Builder;
 import lombok.Data;

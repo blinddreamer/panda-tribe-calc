@@ -1,7 +1,7 @@
 package com.example.pandatribe.repositories;
 
-import com.example.pandatribe.models.dtos.Blueprint;
-import com.example.pandatribe.models.dtos.SystemName;
+import com.example.pandatribe.models.results.Blueprint;
+import com.example.pandatribe.models.results.SystemName;
 import com.example.pandatribe.models.industry.blueprints.BlueprintActivity;
 import com.example.pandatribe.models.universe.Region;
 import com.example.pandatribe.models.universe.Station;

@@ -19,18 +19,18 @@ public class MarketServiceImpl implements MarketService {
     private final EveInteractor eveInteractor;
     public static final String DATA_SOURCE = "tranquility";
     public static final String ORDER_TYPE = "sell";
-    public static final Integer REGION_ID = 10000002;
+
 
     @Override
-    public List<ItemPrice> getItemMarketPrice(Integer typeId) {
+    public List<ItemPrice> getItemMarketPrice(Integer typeId, Integer regionId) {
 
-        return eveInteractor.getItemMarketPrice(REGION_ID,DATA_SOURCE,ORDER_TYPE,typeId) ;
+        return eveInteractor.getItemMarketPrice(regionId,DATA_SOURCE,ORDER_TYPE,typeId) ;
     }
 
     @Override
-    public BigDecimal getItemPrice(Integer systemId, List<ItemPrice> itemPriceList) {
+    public BigDecimal getItemPrice(Integer locationId, List<ItemPrice> itemPriceList) {
         return itemPriceList.stream()
-                .filter(itemPrice -> Objects.equals(itemPrice.getLocationId(), systemId))
+             //   .filter(itemPrice -> Objects.equals(itemPrice.getLocationId(), locationId))
                 .map(ItemPrice::getPrice)
                 .sorted()
                 .findFirst().orElse(BigDecimal.ZERO);
