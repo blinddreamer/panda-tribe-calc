@@ -46,4 +46,16 @@ public class EveBlueprintController {
     public ResponseEntity<GetBlueprintsResult> getEveBlueprints(){
         return ResponseEntity.ok(blueprintService.getEveBlueprints());
     }
+
+    @GetMapping("regions")
+    @Cacheable("regions")
+    public ResponseEntity<GetBlueprintsResult> getEveRegions(){
+        return ResponseEntity.ok(blueprintService.getEveBlueprints());
+    }
+
+    @GetMapping("stations")
+    @Cacheable("stations")
+    public ResponseEntity<GetBlueprintsResult> getEveStations(){
+        return ResponseEntity.ok(blueprintService.getEveBlueprints());
+    }
 }

@@ -4,6 +4,8 @@ import com.example.pandatribe.models.dtos.*;
 import com.example.pandatribe.models.industry.CostIndex;
 import com.example.pandatribe.models.industry.blueprints.BlueprintActivity;
 import com.example.pandatribe.models.industry.blueprints.EveType;
+import com.example.pandatribe.models.universe.Region;
+import com.example.pandatribe.models.universe.Station;
 import com.example.pandatribe.models.universe.SystemInfo;
 import com.example.pandatribe.repositories.interfaces.EveCustomRepository;
 import com.example.pandatribe.repositories.interfaces.EveTypesRepository;
@@ -68,8 +70,9 @@ public class BlueprintServiceImpl implements BlueprintService {
                     .isCreatable(Boolean.TRUE)
                     .quantity(quantity* jobRuns)
                     .materialsList(materialsList)
+                    .industryCosts(industryCosts)
                     .icon(helper.generateIconLink(eveType.get().getTypeId()))
-                    .craftPrice(industryCosts.add(materialPrice))
+                    .craftPrice(materialPrice)
                     .sellPrice(marketService
                             .getItemPrice(LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId()))
                             .multiply(BigDecimal.valueOf(quantity))
@@ -91,6 +94,16 @@ public class BlueprintServiceImpl implements BlueprintService {
     @Override
     public List<SystemName> getEveSystems() {
         return eveCustomRepository.getSystems();
+    }
+
+    @Override
+    public List<Region> getEveRegions() {
+       return eveCustomRepository.getRegions();
+    }
+
+    @Override
+    public List<Station> getEveStations() {
+        return eveCustomRepository.getStations();
     }
 
     private BigDecimal calculateIndustryTaxes(Double facilityTax, Integer systemId, List<BlueprintResult> materials, String activity, Integer buildingIndex){
