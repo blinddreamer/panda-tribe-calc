@@ -19,4 +19,5 @@ public class BlueprintResult {
     private BigDecimal adjustedPrice;
     private Double volume;
     private Boolean isCreatable;
+    private BigDecimal industryCosts;
 }
