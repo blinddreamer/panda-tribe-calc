@@ -41,6 +41,7 @@ public class BlueprintServiceImpl implements BlueprintService {
 
     @Override
     public BlueprintResult getBlueprintData(BlueprintRequest blueprintRequest){
+        Boolean init = Optional.ofNullable(blueprintRequest.getInit()).orElse(false);
         Integer quantity = Optional.ofNullable(blueprintRequest.getQuantity()).orElse(1);
         Integer blueprintMaterialEfficiency = Optional.ofNullable(blueprintRequest.getBlueprintMe()).orElse(0);
         Integer rigDiscount = Optional.ofNullable(blueprintRequest.getBuildingRig()).orElse(0);
@@ -55,6 +56,7 @@ public class BlueprintServiceImpl implements BlueprintService {
         if (eveType.isEmpty()){
             return null;
         }
+        Integer size = init ? 256 : 32;
         BlueprintActivity blueprintActivity = eveCustomRepository.getBluePrintInfoByProduct(eveType.get().getTypeId());
         if(Objects.nonNull(blueprintActivity)) {
             SystemInfo systemInfo = eveCustomRepository.getSystemInfo(system);
@@ -76,7 +78,7 @@ public class BlueprintServiceImpl implements BlueprintService {
                     .quantity(quantity* jobRuns)
                     .materialsList(materialsList)
                     .industryCosts(industryCosts)
-                    .icon(helper.generateIconLink(eveType.get().getTypeId()))
+                    .icon(helper.generateIconLink(eveType.get().getTypeId(),size))
                     .craftPrice(materialPrice)
                     .sellPrice(marketService
                             .getItemPrice(DEFAULT_LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId(),regionId))

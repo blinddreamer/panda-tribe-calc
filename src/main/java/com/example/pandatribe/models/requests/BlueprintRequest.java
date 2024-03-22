@@ -13,4 +13,5 @@ public class BlueprintRequest {
     private Integer building;
     private Integer jobRuns;
     private Integer regionId;
+    private Boolean init;
 }
