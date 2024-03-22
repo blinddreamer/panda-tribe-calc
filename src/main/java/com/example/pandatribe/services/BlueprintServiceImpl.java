@@ -61,7 +61,7 @@ public class BlueprintServiceImpl implements BlueprintService {
         if(Objects.nonNull(blueprintActivity)) {
             SystemInfo systemInfo = eveCustomRepository.getSystemInfo(system);
         if(Objects.isNull(systemInfo)){
-            systemInfo = eveCustomRepository.getSystemInfo("Jita");
+            systemInfo = eveCustomRepository.getSystemInfo(DEFAULT_SYSTEM);
         }
             Integer volume = eveCustomRepository.getVolume(eveType.get().getTypeId());
             Integer  matBlueprintId = blueprintActivity.getBlueprintId();
@@ -78,7 +78,7 @@ public class BlueprintServiceImpl implements BlueprintService {
                     .quantity(quantity* jobRuns)
                     .materialsList(materialsList)
                     .industryCosts(industryCosts)
-                    .icon(helper.generateIconLink(eveType.get().getTypeId(),size))
+                    .icon(init ? helper.generateRenderLink(eveType.get().getTypeId(),size) : helper.generateIconLink(eveType.get().getTypeId(),size))
                     .craftPrice(materialPrice)
                     .sellPrice(marketService
                             .getItemPrice(DEFAULT_LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId(),regionId))
