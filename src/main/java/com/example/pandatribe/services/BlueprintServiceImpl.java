@@ -1,6 +1,7 @@
 package com.example.pandatribe.services;
 
-import com.example.pandatribe.models.dtos.*;
+import com.example.pandatribe.models.requests.BlueprintRequest;
+import com.example.pandatribe.models.results.*;
 import com.example.pandatribe.models.industry.CostIndex;
 import com.example.pandatribe.models.industry.blueprints.BlueprintActivity;
 import com.example.pandatribe.models.industry.blueprints.EveType;
@@ -27,7 +28,9 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class BlueprintServiceImpl implements BlueprintService {
-    public static final Integer LOCATION_ID = 60003760;
+    public static final Integer REGION_ID = 10000002;
+    public static final String DEFAULT_SYSTEM = "Jita";
+    public static final Integer DEFAULT_LOCATION_ID = 60003760;
     private final MaterialService materialsService;
     private final MarketService marketService;
     private final EveTypesRepository repository;
@@ -39,13 +42,15 @@ public class BlueprintServiceImpl implements BlueprintService {
     @Override
     public BlueprintResult getBlueprintData(BlueprintRequest blueprintRequest){
         Integer quantity = Optional.ofNullable(blueprintRequest.getQuantity()).orElse(1);
-        Integer materialEfficiency = Optional.ofNullable(blueprintRequest.getBlueprintMe()).orElse(0);
-        Integer discountBR = Optional.ofNullable(blueprintRequest.getBuildingRig()).orElse(0);
-        Integer discountB = Optional.ofNullable(blueprintRequest.getBuilding()).orElse(0);
-        String system = Optional.ofNullable(blueprintRequest.getSystem()).filter(s -> !s.isEmpty()).orElse("Jita");
+        Integer blueprintMaterialEfficiency = Optional.ofNullable(blueprintRequest.getBlueprintMe()).orElse(0);
+        Integer rigDiscount = Optional.ofNullable(blueprintRequest.getBuildingRig()).orElse(0);
+        Integer buildingDiscount = Optional.ofNullable(blueprintRequest.getBuilding()).orElse(0);
+        String system = Optional.ofNullable(blueprintRequest.getSystem()).filter(s -> !s.isEmpty()).orElse(DEFAULT_SYSTEM);
         Double facilityTax = Optional.ofNullable(blueprintRequest.getFacilityTax()).orElse(0.0);
         String blueprintName = blueprintRequest.getBlueprintName();
         Integer jobRuns = Optional.ofNullable(blueprintRequest.getJobRuns()).orElse(1);
+        Integer regionId = Optional.ofNullable(blueprintRequest.getRegionId()).orElse(REGION_ID);
+
         Optional<EveType> eveType = repository.findEveTypeByTypeName(blueprintName);
         if (eveType.isEmpty()){
             return null;
@@ -58,9 +63,9 @@ public class BlueprintServiceImpl implements BlueprintService {
         }
             Integer volume = eveCustomRepository.getVolume(eveType.get().getTypeId());
             Integer  matBlueprintId = blueprintActivity.getBlueprintId();
-            List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, quantity, discountBR, materialEfficiency, discountB, systemInfo.getSecurity(), jobRuns);
+            List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, quantity, rigDiscount, blueprintMaterialEfficiency, buildingDiscount, systemInfo.getSecurity(), jobRuns, regionId);
             String activity = blueprintActivity.getActivityId().equals(11) ? "reaction" : "manufacturing";
-            BigDecimal industryCosts = calculateIndustryTaxes(facilityTax, systemInfo.getSystemId(), materialsList, activity, discountB);
+            BigDecimal industryCosts = calculateIndustryTaxes(facilityTax, systemInfo.getSystemId(), materialsList, activity, buildingDiscount);
             BigDecimal materialPrice = materialsList.stream()
                     .map(BlueprintResult::getSellPrice)
                     .reduce(BigDecimal.ZERO,BigDecimal::add);
@@ -74,7 +79,7 @@ public class BlueprintServiceImpl implements BlueprintService {
                     .icon(helper.generateIconLink(eveType.get().getTypeId()))
                     .craftPrice(materialPrice)
                     .sellPrice(marketService
-                            .getItemPrice(LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId()))
+                            .getItemPrice(DEFAULT_LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId(),regionId))
                             .multiply(BigDecimal.valueOf(quantity))
                             .multiply(BigDecimal.valueOf(jobRuns)))
                     .build();
@@ -85,10 +90,9 @@ public class BlueprintServiceImpl implements BlueprintService {
 
     @Override
     public GetBlueprintsResult getEveBlueprints() {
-        GetBlueprintsResult result =  GetBlueprintsResult.builder()
+        return GetBlueprintsResult.builder()
                 .blueprints(eveCustomRepository.getBlueprints().stream().filter(bp-> Objects.nonNull(bp.getBlueprint())).collect(Collectors.toList()))
                 .build();
-        return result;
     }
 
     @Override

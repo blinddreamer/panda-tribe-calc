@@ -1,10 +1,12 @@
 package com.example.pandatribe.controllers;
 
 
-import com.example.pandatribe.models.dtos.BlueprintRequest;
-import com.example.pandatribe.models.dtos.BlueprintResult;
-import com.example.pandatribe.models.dtos.GetBlueprintsResult;
-import com.example.pandatribe.models.dtos.SystemName;
+import com.example.pandatribe.models.requests.BlueprintRequest;
+import com.example.pandatribe.models.results.BlueprintResult;
+import com.example.pandatribe.models.results.GetBlueprintsResult;
+import com.example.pandatribe.models.results.SystemName;
+import com.example.pandatribe.models.universe.Region;
+import com.example.pandatribe.models.universe.Station;
 import com.example.pandatribe.services.contracts.BlueprintService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -14,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,13 +50,13 @@ public class EveBlueprintController {
 
     @GetMapping("regions")
     @Cacheable("regions")
-    public ResponseEntity<GetBlueprintsResult> getEveRegions(){
-        return ResponseEntity.ok(blueprintService.getEveBlueprints());
+    public ResponseEntity<List<Region>> getEveRegions(){
+        return ResponseEntity.ok(blueprintService.getEveRegions());
     }
 
     @GetMapping("stations")
     @Cacheable("stations")
-    public ResponseEntity<GetBlueprintsResult> getEveStations(){
-        return ResponseEntity.ok(blueprintService.getEveBlueprints());
+    public ResponseEntity<List<Station>> getEveStations(){
+        return ResponseEntity.ok(blueprintService.getEveStations());
     }
 }

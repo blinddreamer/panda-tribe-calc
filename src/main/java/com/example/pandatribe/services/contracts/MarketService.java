@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface MarketService {
-    List<ItemPrice> getItemMarketPrice(Integer typeId);
+    List<ItemPrice> getItemMarketPrice(Integer typeId, Integer regionId);
 
     BigDecimal getItemPrice(Integer locationId, List<ItemPrice> itemPriceList);
 

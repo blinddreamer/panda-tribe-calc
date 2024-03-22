@@ -1,8 +1,6 @@
-package com.example.pandatribe.models.dtos;
+package com.example.pandatribe.models.requests;
 
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 @Data
 public class BlueprintRequest {
@@ -14,4 +12,5 @@ public class BlueprintRequest {
     private Integer buildingRig;
     private Integer building;
     private Integer jobRuns;
+    private Integer regionId;
 }

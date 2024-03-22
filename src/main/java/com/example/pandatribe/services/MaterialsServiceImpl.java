@@ -1,6 +1,6 @@
 package com.example.pandatribe.services;
 
-import com.example.pandatribe.models.dtos.BlueprintResult;
+import com.example.pandatribe.models.results.BlueprintResult;
 import com.example.pandatribe.models.industry.BuildingBonus;
 import com.example.pandatribe.models.industry.RigBonus;
 import com.example.pandatribe.models.industry.blueprints.BlueprintActivity;
@@ -36,19 +36,19 @@ public class MaterialsServiceImpl implements MaterialService {
 
 
     @Override
-    public List<BlueprintResult> getMaterialsByActivity(Integer blueprintId, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB, Double security, Integer blueprintCount) {
+    public List<BlueprintResult> getMaterialsByActivity(Integer blueprintId, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB, Double security, Integer blueprintCount, Integer regionId) {
         List<Material> materials = materialBlueprintRepository.findMaterialsByActivity(blueprintId);
-        return getSimpleMaterials(materials, quantity, discountBR, materialEfficiency, discountB, security, blueprintCount);
+        return getSimpleMaterials(materials, quantity, discountBR, materialEfficiency, discountB, security, blueprintCount, regionId);
     }
 
-    private List<BlueprintResult> getSimpleMaterials(List<Material> materials, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB, Double security, Integer blueprintCount) {
+    private List<BlueprintResult> getSimpleMaterials(List<Material> materials, Integer quantity, Integer discountBR, Integer materialEfficiency, Integer discountB, Double security, Integer blueprintCount, Integer regionId) {
         List<BlueprintResult> materialList = new ArrayList<>();
         RigBonus rigBonus = helper.getRigBonus(discountBR);
         BuildingBonus buildingBonus = helper.getBuildingBonus(discountB);
         List<MarketPriceData> marketPriceData = marketService.getMarketPriceData();
         Double rigMultiplier = getRigMultiplier(rigBonus, security);
         for (Material material : materials) {
-            List<ItemPrice> marketItemPriceData = marketService.getItemMarketPrice(material.getBlueprintTypeId().getMaterialTypeId());
+            List<ItemPrice> marketItemPriceData = marketService.getItemMarketPrice(material.getBlueprintTypeId().getMaterialTypeId(),regionId);
             Optional<EveType> eveType = eveTypesRepository.findEveTypeByTypeId(material.getBlueprintTypeId().getMaterialTypeId());
             if (eveType.isEmpty()) {
                 continue;
