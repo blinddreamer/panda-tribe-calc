@@ -62,7 +62,7 @@ public class MaterialsServiceImpl implements MaterialService {
             BlueprintResult.BlueprintResultBuilder materialDto = BlueprintResult.builder()
                     .name(eveType.get().getTypeName())
                     .quantity(matQuantity)
-                    .icon(helper.generateIconLink(eveType.get().getTypeId()))
+                    .icon(helper.generateIconLink(eveType.get().getTypeId(),32))
                     .sellPrice(marketService.getItemPrice(LOCATION_ID, marketItemPriceData).multiply(BigDecimal.valueOf(matQuantity)))
                     .volume((Objects.nonNull(volume) ? volume : eveType.get().getVolume()) * matQuantity)
                     .adjustedPrice(marketPriceData.stream()

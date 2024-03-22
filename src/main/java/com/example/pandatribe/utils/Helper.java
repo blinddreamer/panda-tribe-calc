@@ -34,10 +34,13 @@ public class Helper {
 
     }
 
-    public String generateIconLink(Integer typeId){
-        return String.format("https://images.evetech.net/types/%d/icon?size=32",typeId);
+    public String generateIconLink(Integer typeId, Integer size){
+        return String.format("https://images.evetech.net/types/%d/icon?size=%d",typeId,size);
     }
 
+    public String generateRenderLink(Integer typeId, Integer size){
+        return String.format("https://images.evetech.net/types/%d/render?size=%d",typeId, size);
+    }
     public BuildingBonus getBuildingBonus(Integer index){
         return buildingBonuses.get(index);
     }
