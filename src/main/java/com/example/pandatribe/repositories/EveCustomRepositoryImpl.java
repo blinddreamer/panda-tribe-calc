@@ -69,7 +69,7 @@ public class EveCustomRepositoryImpl implements EveCustomRepository {
 
     @Override
     public List<Region> getRegions() {
-        String nativeQuery = "SELECT \"regionID\", \"regionName\" FROM evesde.\"mapRegions\"";
+        String nativeQuery = "SELECT \"regionID\", \"regionName\" FROM evesde.\"mapRegions\" ORDER BY \"regionName\" ASC";
         List<Object[]> result = entityManager.createNativeQuery(nativeQuery).getResultList();
         return result.stream().map(region -> Region.builder().regionId((Integer) region[0]).regionName((String) region[1]).build())
                 .collect(Collectors.toList());
@@ -77,9 +77,9 @@ public class EveCustomRepositoryImpl implements EveCustomRepository {
 
     @Override
     public List<Station> getStations() {
-        String nativeQuery = "SELECT \"stationID\", \"stationName\" FROM evesde.\"staStations\"";
+        String nativeQuery = "SELECT \"stationID\", \"stationName\" FROM evesde.\"staStations\" ORDER BY \"stationName\" ASC";
         List<Object[]> result = entityManager.createNativeQuery(nativeQuery).getResultList();
-        return result.stream().map(station -> Station.builder().stationId((Integer) station[0]).stationName((String) station[1]).build())
+        return result.stream().map(station -> Station.builder().stationId((Long) station[0]).stationName((String) station[1]).build())
                 .collect(Collectors.toList());
     }
 
