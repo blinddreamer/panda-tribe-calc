@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>pandatribe</artifactId>
+    <artifactId>eve-helper-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>panda2</name>
     <description>panda2</description>
