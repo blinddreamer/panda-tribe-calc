@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
+@CrossOrigin(maxAge = 3600)
 @AllArgsConstructor
 @RequestMapping("/api/v1/")
 public class EveBlueprintController {
