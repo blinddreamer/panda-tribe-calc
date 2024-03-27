@@ -23,7 +23,7 @@ public class EveCustomRepositoryImpl implements EveCustomRepository {
 
     @Override
     public BlueprintActivity getBluePrintInfoByProduct(Integer productId) {
-        String nativeQuery = "SELECT quantity,\"typeID\",\"activityID\" FROM evesde.\"industryActivityProducts\" iap WHERE iap.\"productTypeID\" =:productId ";
+        String nativeQuery = "SELECT quantity,\"typeID\",\"activityID\" FROM public.\"industryActivityProducts\" iap WHERE iap.\"productTypeID\" =:productId ";
         List<Object[]> result = entityManager.createNativeQuery(nativeQuery).setParameter("productId", productId).getResultList();
         return result.isEmpty() ? null :
                 BlueprintActivity.builder()
@@ -34,7 +34,7 @@ public class EveCustomRepositoryImpl implements EveCustomRepository {
     }
 
     public BlueprintActivity getBluePrintInfoByBlueprint(Integer blueprintId) {
-        String nativeQuery = "SELECT quantity,\"typeID\",\"activityID\" FROM evesde.\"industryActivityProducts\" iap WHERE iap.\"typeID\" =:blueprintId ";
+        String nativeQuery = "SELECT quantity,\"typeID\",\"activityID\" FROM public.\"industryActivityProducts\" iap WHERE iap.\"typeID\" =:blueprintId ";
         List<Object[]> result = entityManager.createNativeQuery(nativeQuery).setParameter("blueprintId", blueprintId).getResultList();
         return result.isEmpty() ? null :
                 BlueprintActivity.builder()
@@ -45,31 +45,31 @@ public class EveCustomRepositoryImpl implements EveCustomRepository {
     }
 
     public SystemInfo getSystemInfo(String systemName){
-        String nativeQuery = "SELECT \"solarSystemID\", \"security\" FROM evesde.\"mapSolarSystems\" mss WHERE mss.\"solarSystemName\" = :systemName";
+        String nativeQuery = "SELECT \"solarSystemID\", \"security\" FROM public.\"mapSolarSystems\" mss WHERE mss.\"solarSystemName\" = :systemName";
         List<Object[]> result = entityManager.createNativeQuery(nativeQuery).setParameter("systemName",systemName).getResultList();
         return result.isEmpty() ? null : SystemInfo.builder().systemId((Integer) result.get(0)[0]).security((Double) result.get(0)[1]).build();
     }
 
     public List<SystemName> getSystems(){
-        String nativeQuery = "SELECT \"solarSystemName\" FROM evesde.\"mapSolarSystems\"";
+        String nativeQuery = "SELECT \"solarSystemName\" FROM public.\"mapSolarSystems\"";
         List<Object> result = entityManager.createNativeQuery(nativeQuery).getResultList();
         return result.stream().map(name-> SystemName.builder().systemName((String) name).build()).collect(Collectors.toList());
     }
     public Integer getVolume(Integer typeId){
-        String nativeQuery = "SELECT \"volume\" FROM evesde.\"invVolumes\" iv WHERE iv.\"typeID\" = :typeId";
+        String nativeQuery = "SELECT \"volume\" FROM public.\"invVolumes\" iv WHERE iv.\"typeID\" = :typeId";
         List<Object> result = entityManager.createNativeQuery(nativeQuery).setParameter("typeId",typeId).getResultList();
         return result.isEmpty() ? null : (Integer) result.get(0);
     }
 
     public List<Blueprint> getBlueprints(){
-        String nativeQuery = "SELECT \"productTypeID\" FROM evesde.\"industryActivityProducts\" iap WHERE iap.\"activityID\" = 1 OR iap.\"activityID\" = 11";
+        String nativeQuery = "SELECT \"productTypeID\" FROM public.\"industryActivityProducts\" iap WHERE iap.\"activityID\" = 1 OR iap.\"activityID\" = 11";
         List<Object> result = entityManager.createNativeQuery(nativeQuery).getResultList();
         return result.stream().map(id-> Blueprint.builder().blueprint(getBlueprintName((Integer) id)).build()).collect(Collectors.toList());
     }
 
     @Override
     public List<Region> getRegions() {
-        String nativeQuery = "SELECT \"regionID\", \"regionName\" FROM evesde.\"mapRegions\" ORDER BY \"regionName\" ASC";
+        String nativeQuery = "SELECT \"regionID\", \"regionName\" FROM public.\"mapRegions\" ORDER BY \"regionName\" ASC";
         List<Object[]> result = entityManager.createNativeQuery(nativeQuery).getResultList();
         return result.stream().map(region -> Region.builder().regionId((Integer) region[0]).regionName((String) region[1]).build())
                 .collect(Collectors.toList());
@@ -77,14 +77,14 @@ public class EveCustomRepositoryImpl implements EveCustomRepository {
 
     @Override
     public List<Station> getStations() {
-        String nativeQuery = "SELECT \"stationID\", \"stationName\" FROM evesde.\"staStations\" ORDER BY \"stationName\" ASC";
+        String nativeQuery = "SELECT \"stationID\", \"stationName\" FROM public.\"staStations\" ORDER BY \"stationName\" ASC";
         List<Object[]> result = entityManager.createNativeQuery(nativeQuery).getResultList();
         return result.stream().map(station -> Station.builder().stationId((Long) station[0]).stationName((String) station[1]).build())
                 .collect(Collectors.toList());
     }
 
     private String getBlueprintName(Integer id){
-        String nativeQuery = "SELECT \"typeName\" FROM evesde.\"invTypes\" it WHERE it.\"typeID\" = :id";
+        String nativeQuery = "SELECT \"typeName\" FROM public.\"invTypes\" it WHERE it.\"typeID\" = :id";
         List<Object> result = entityManager.createNativeQuery(nativeQuery).setParameter("id",id).getResultList();
         return result.isEmpty() ? null : (String) result.get(0);
     }

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "\"industryActivityMaterials\"",schema = "evesde")
+@Table(name = "\"industryActivityMaterials\"",schema = "public")
 public class Material {
 
     @EmbeddedId
