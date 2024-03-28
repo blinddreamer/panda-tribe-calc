@@ -45,6 +45,7 @@ public class EveBlueprintController {
     @GetMapping("blueprints")
     @Cacheable("blueprints")
     public ResponseEntity<GetBlueprintsResult> getEveBlueprints(){
+        LOGGER.info("Request for blueprints received");
         return ResponseEntity.ok(blueprintService.getEveBlueprints());
     }
 

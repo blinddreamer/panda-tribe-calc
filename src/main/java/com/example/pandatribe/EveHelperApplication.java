@@ -8,9 +8,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableCaching
 @EnableScheduling
-public class PandaTribeApplication {
+public class EveHelperApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PandaTribeApplication.class, args);
+        SpringApplication.run(EveHelperApplication.class, args);
     }
 }

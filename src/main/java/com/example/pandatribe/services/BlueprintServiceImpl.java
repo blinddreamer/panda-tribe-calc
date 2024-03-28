@@ -16,6 +16,8 @@ import com.example.pandatribe.services.contracts.MarketService;
 import com.example.pandatribe.services.contracts.MaterialService;
 import com.example.pandatribe.utils.Helper;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class BlueprintServiceImpl implements BlueprintService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BlueprintServiceImpl.class);
     public static final Integer REGION_ID = 10000002;
     public static final String DEFAULT_SYSTEM = "Jita";
     public static final Integer DEFAULT_LOCATION_ID = 60003760;
@@ -92,8 +95,10 @@ public class BlueprintServiceImpl implements BlueprintService {
 
     @Override
     public GetBlueprintsResult getEveBlueprints() {
+        List<Blueprint> blueprints = eveCustomRepository.getBlueprints().stream().filter(bp-> Objects.nonNull(bp.getBlueprint())).toList();
+        LOGGER.info("Blueprints loaded - {}", blueprints.isEmpty());
         return GetBlueprintsResult.builder()
-                .blueprints(eveCustomRepository.getBlueprints().stream().filter(bp-> Objects.nonNull(bp.getBlueprint())).collect(Collectors.toList()))
+                .blueprints(blueprints)
                 .build();
     }
 
