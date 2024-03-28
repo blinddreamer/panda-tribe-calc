@@ -35,6 +35,8 @@ public class BlueprintServiceImpl implements BlueprintService {
     public static final Integer REGION_ID = 10000002;
     public static final String DEFAULT_SYSTEM = "Jita";
     public static final Integer DEFAULT_LOCATION_ID = 60003760;
+    public static final String REACTION = "reaction";
+    public static final String MANUFACTURING = "manufacturing";
     private final MaterialService materialsService;
     private final MarketService marketService;
     private final EveTypesRepository repository;
@@ -70,7 +72,7 @@ public class BlueprintServiceImpl implements BlueprintService {
             Integer volume = eveCustomRepository.getVolume(eveType.get().getTypeId());
             Integer  matBlueprintId = blueprintActivity.getBlueprintId();
             List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, quantity, rigDiscount, blueprintMaterialEfficiency, buildingDiscount, systemInfo.getSecurity(), jobRuns, regionId);
-            String activity = blueprintActivity.getActivityId().equals(REACTION_ACTIVITY_ID) ? "reaction" : "manufacturing";
+            String activity = blueprintActivity.getActivityId().equals(REACTION_ACTIVITY_ID) ? REACTION : MANUFACTURING;
             BigDecimal industryCosts = calculateIndustryTaxes(facilityTax, systemInfo.getSystemId(), materialsList, activity, buildingDiscount);
 
             return BlueprintResult.builder()
@@ -95,7 +97,6 @@ public class BlueprintServiceImpl implements BlueprintService {
     public GetBlueprintsResult getEveBlueprints() {
         List<Blueprint> blueprints = eveCustomRepository.getBlueprints().stream().filter(bp-> Objects.nonNull(bp.getBlueprint())).toList();
         LOGGER.info("Blueprints loaded - {}", !blueprints.isEmpty());
-        LOGGER.info(blueprints.get(0).toString());
         return GetBlueprintsResult.builder()
                 .blueprints(blueprints)
                 .build();
@@ -105,7 +106,6 @@ public class BlueprintServiceImpl implements BlueprintService {
     public List<SystemName> getEveSystems() {
         List<SystemName> systems =  eveCustomRepository.getSystems();
         LOGGER.info("Regions loaded - {}", !systems.isEmpty());
-        LOGGER.info(systems.get(0).toString());
         return systems;
     }
 
@@ -113,7 +113,6 @@ public class BlueprintServiceImpl implements BlueprintService {
     public List<Region> getEveRegions() {
         List<Region> regions = eveCustomRepository.getRegions();
         LOGGER.info("Regions loaded - {}", !regions.isEmpty());
-        LOGGER.info(regions.get(0).toString());
         return regions;
     }
 
@@ -121,7 +120,6 @@ public class BlueprintServiceImpl implements BlueprintService {
     public List<Station> getEveStations() {
         List<Station> stations = eveCustomRepository.getStations();
         LOGGER.info("Stations loaded - {}", !stations.isEmpty());
-        LOGGER.info(stations.get(0).toString());
         return stations;
     }
 

@@ -27,7 +27,7 @@ public class MarketServiceImpl implements MarketService {
     @Override
     public List<ItemPrice> getItemMarketPrice(Integer typeId, Integer regionId) {
         List<ItemPrice> itemPriceList = eveInteractor.getItemMarketPrice(regionId,DATA_SOURCE,ORDER_TYPE,typeId) ;
-        LOGGER.info("Item prices obtained {}", !itemPriceList.isEmpty());
+        LOGGER.info("Item {} prices obtained {}", typeId, !itemPriceList.isEmpty());
         return itemPriceList;
     }
 
@@ -45,7 +45,7 @@ public class MarketServiceImpl implements MarketService {
     @Cacheable("cacheMarketPrices")
     public List<MarketPriceData> getMarketPriceData(){
         List<MarketPriceData> marketPriceDataList = eveInteractor.getMarketPrices();
-        LOGGER.info("Makter prices are obtained: {}", !marketPriceDataList.isEmpty());
+        LOGGER.info("All market prices data is obtained: {}", !marketPriceDataList.isEmpty());
         return marketPriceDataList;
     }
 }
