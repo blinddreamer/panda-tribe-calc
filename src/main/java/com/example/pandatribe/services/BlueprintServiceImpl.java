@@ -97,7 +97,7 @@ public class BlueprintServiceImpl implements BlueprintService {
     public GetBlueprintsResult getEveBlueprints() {
         List<Blueprint> blueprints = eveCustomRepository.getBlueprints().stream().filter(bp-> Objects.nonNull(bp.getBlueprint())).toList();
         LOGGER.info("Blueprints loaded - {}", !blueprints.isEmpty());
-        LOGGER.info(blueprints.toString());
+        LOGGER.info(blueprints.get(0).toString());
         return GetBlueprintsResult.builder()
                 .blueprints(blueprints)
                 .build();
