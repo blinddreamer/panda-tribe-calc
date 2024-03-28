@@ -96,7 +96,7 @@ public class BlueprintServiceImpl implements BlueprintService {
     @Override
     public GetBlueprintsResult getEveBlueprints() {
         List<Blueprint> blueprints = eveCustomRepository.getBlueprints().stream().filter(bp-> Objects.nonNull(bp.getBlueprint())).toList();
-        LOGGER.info("Blueprints loaded - {}", blueprints.isEmpty());
+        LOGGER.info("Blueprints loaded - {}", !blueprints.isEmpty());
         return GetBlueprintsResult.builder()
                 .blueprints(blueprints)
                 .build();
@@ -104,17 +104,23 @@ public class BlueprintServiceImpl implements BlueprintService {
 
     @Override
     public List<SystemName> getEveSystems() {
-        return eveCustomRepository.getSystems();
+        List<SystemName> systems =  eveCustomRepository.getSystems();
+        LOGGER.info("Regions loaded - {}", !systems.isEmpty());
+        return systems;
     }
 
     @Override
     public List<Region> getEveRegions() {
-       return eveCustomRepository.getRegions();
+        List<Region> regions = eveCustomRepository.getRegions();
+        LOGGER.info("Regions loaded - {}", !regions.isEmpty());
+        return regions;
     }
 
     @Override
     public List<Station> getEveStations() {
-        return eveCustomRepository.getStations();
+        List<Station> stations = eveCustomRepository.getStations();
+        LOGGER.info("Stations loaded - {}", !stations.isEmpty());
+        return stations;
     }
 
     private BigDecimal calculateIndustryTaxes(Double facilityTax, Integer systemId, List<BlueprintResult> materials, String activity, Integer buildingIndex){
