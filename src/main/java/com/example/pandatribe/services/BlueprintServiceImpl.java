@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class BlueprintServiceImpl implements BlueprintService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BlueprintServiceImpl.class);
+    public static final Integer REACTION_ACTIVITY_ID = 11;
     public static final Integer REGION_ID = 10000002;
     public static final String DEFAULT_SYSTEM = "Jita";
     public static final Integer DEFAULT_LOCATION_ID = 60003760;
@@ -69,11 +70,9 @@ public class BlueprintServiceImpl implements BlueprintService {
             Integer volume = eveCustomRepository.getVolume(eveType.get().getTypeId());
             Integer  matBlueprintId = blueprintActivity.getBlueprintId();
             List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, quantity, rigDiscount, blueprintMaterialEfficiency, buildingDiscount, systemInfo.getSecurity(), jobRuns, regionId);
-            String activity = blueprintActivity.getActivityId().equals(11) ? "reaction" : "manufacturing";
+            String activity = blueprintActivity.getActivityId().equals(REACTION_ACTIVITY_ID) ? "reaction" : "manufacturing";
             BigDecimal industryCosts = calculateIndustryTaxes(facilityTax, systemInfo.getSystemId(), materialsList, activity, buildingDiscount);
-            BigDecimal materialPrice = materialsList.stream()
-                    .map(BlueprintResult::getSellPrice)
-                    .reduce(BigDecimal.ZERO,BigDecimal::add);
+
             return BlueprintResult.builder()
                     .name(blueprintName)
                     .volume((Objects.nonNull(volume)? volume : eveType.get().getVolume()) * quantity *jobRuns)
@@ -82,7 +81,6 @@ public class BlueprintServiceImpl implements BlueprintService {
                     .materialsList(materialsList)
                     .industryCosts(industryCosts)
                     .icon(init ? helper.generateRenderLink(eveType.get().getTypeId(),size) : helper.generateIconLink(eveType.get().getTypeId(),size))
-                    .craftPrice(materialPrice)
                     .sellPrice(marketService
                             .getItemPrice(DEFAULT_LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId(),regionId))
                             .multiply(BigDecimal.valueOf(quantity))
@@ -107,6 +105,7 @@ public class BlueprintServiceImpl implements BlueprintService {
     public List<SystemName> getEveSystems() {
         List<SystemName> systems =  eveCustomRepository.getSystems();
         LOGGER.info("Regions loaded - {}", !systems.isEmpty());
+        LOGGER.info(systems.get(0).toString());
         return systems;
     }
 
@@ -114,6 +113,7 @@ public class BlueprintServiceImpl implements BlueprintService {
     public List<Region> getEveRegions() {
         List<Region> regions = eveCustomRepository.getRegions();
         LOGGER.info("Regions loaded - {}", !regions.isEmpty());
+        LOGGER.info(regions.get(0).toString());
         return regions;
     }
 
@@ -121,6 +121,7 @@ public class BlueprintServiceImpl implements BlueprintService {
     public List<Station> getEveStations() {
         List<Station> stations = eveCustomRepository.getStations();
         LOGGER.info("Stations loaded - {}", !stations.isEmpty());
+        LOGGER.info(stations.get(0).toString());
         return stations;
     }
 

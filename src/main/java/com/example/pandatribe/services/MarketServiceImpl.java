@@ -5,6 +5,8 @@ import com.example.pandatribe.models.market.ItemPrice;
 import com.example.pandatribe.models.market.MarketPriceData;
 import com.example.pandatribe.services.contracts.MarketService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import java.util.Objects;
 @Service
 @AllArgsConstructor
 public class MarketServiceImpl implements MarketService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MarketServiceImpl.class);
 
     private final EveInteractor eveInteractor;
     public static final String DATA_SOURCE = "tranquility";
@@ -23,8 +26,9 @@ public class MarketServiceImpl implements MarketService {
 
     @Override
     public List<ItemPrice> getItemMarketPrice(Integer typeId, Integer regionId) {
-
-        return eveInteractor.getItemMarketPrice(regionId,DATA_SOURCE,ORDER_TYPE,typeId) ;
+        List<ItemPrice> itemPriceList = eveInteractor.getItemMarketPrice(regionId,DATA_SOURCE,ORDER_TYPE,typeId) ;
+        LOGGER.info("Item prices obtained {}", !itemPriceList.isEmpty());
+        return itemPriceList;
     }
 
     @Override
@@ -40,6 +44,8 @@ public class MarketServiceImpl implements MarketService {
     @Override
     @Cacheable("cacheMarketPrices")
     public List<MarketPriceData> getMarketPriceData(){
-        return eveInteractor.getMarketPrices();
+        List<MarketPriceData> marketPriceDataList = eveInteractor.getMarketPrices();
+        LOGGER.info("Makter prices are obtained: {}", !marketPriceDataList.isEmpty());
+        return marketPriceDataList;
     }
 }

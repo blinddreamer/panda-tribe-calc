@@ -29,9 +29,10 @@ public class EveBlueprintController {
     @PostMapping("type")
     @Cacheable("cacheCalculator")
     public ResponseEntity<?> getEveType(@RequestBody BlueprintRequest blueprintRequest){
+        LOGGER.info("Request for blueprint: " + blueprintRequest);
         BlueprintResult blueprintDto = blueprintService.getBlueprintData(blueprintRequest);
-        LOGGER.info("Received request for: " + blueprintRequest);
         if(Objects.isNull(blueprintDto)){
+            LOGGER.info("Blueprint {} not found", blueprintRequest.getBlueprintName());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blueprint not found");
         }
         return ResponseEntity.ok(blueprintDto);
@@ -40,6 +41,7 @@ public class EveBlueprintController {
     @GetMapping("systems")
     @Cacheable("systemNames")
     public ResponseEntity<List<SystemName>> getEveSystems(){
+        LOGGER.info("Request for systems received");
         return ResponseEntity.ok(blueprintService.getEveSystems());
     }
     @GetMapping("blueprints")
@@ -52,12 +54,14 @@ public class EveBlueprintController {
     @GetMapping("regions")
     @Cacheable("regions")
     public ResponseEntity<List<Region>> getEveRegions(){
+        LOGGER.info("Request for regions received.");
         return ResponseEntity.ok(blueprintService.getEveRegions());
     }
 
     @GetMapping("stations")
     @Cacheable("stations")
     public ResponseEntity<List<Station>> getEveStations(){
+        LOGGER.info("Request for stations received.");
         return ResponseEntity.ok(blueprintService.getEveStations());
     }
 }
