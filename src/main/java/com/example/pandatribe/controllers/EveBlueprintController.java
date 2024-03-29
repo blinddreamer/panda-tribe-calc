@@ -1,6 +1,7 @@
 package com.example.pandatribe.controllers;
 
 
+import com.example.pandatribe.logging.JsonLogger;
 import com.example.pandatribe.models.requests.BlueprintRequest;
 import com.example.pandatribe.models.results.BlueprintResult;
 import com.example.pandatribe.models.results.GetBlueprintsResult;
@@ -24,6 +25,7 @@ import java.util.Objects;
 @RequestMapping("/api/v1/")
 public class EveBlueprintController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EveBlueprintController.class);
+    private final JsonLogger jsonLogger;
     private final BlueprintService blueprintService;
 
     @PostMapping("type")
@@ -35,6 +37,7 @@ public class EveBlueprintController {
             LOGGER.info("Blueprint {} not found", blueprintRequest.getBlueprintName());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blueprint not found");
         }
+        jsonLogger.println(blueprintDto);
         return ResponseEntity.ok(blueprintDto);
     }
 

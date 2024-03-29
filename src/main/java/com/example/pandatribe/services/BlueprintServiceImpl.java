@@ -19,6 +19,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -46,6 +47,7 @@ public class BlueprintServiceImpl implements BlueprintService {
 
 
     @Override
+    @Transactional
     public BlueprintResult getBlueprintData(BlueprintRequest blueprintRequest){
         Boolean init = Optional.ofNullable(blueprintRequest.getInit()).orElse(false);
         Integer quantity = Optional.ofNullable(blueprintRequest.getQuantity()).orElse(1);
