@@ -1,5 +1,6 @@
 package com.example.pandatribe.repositories;
 
+import com.example.pandatribe.models.market.Category;
 import com.example.pandatribe.models.results.Blueprint;
 import com.example.pandatribe.models.results.SystemName;
 import com.example.pandatribe.models.industry.blueprints.BlueprintActivity;
@@ -89,6 +90,11 @@ public class EveCustomRepositoryImpl implements EveCustomRepository {
         List<Object[]> result = entityManager.createNativeQuery(nativeQuery).getResultList();
         return result.stream().map(station -> Station.builder().stationId((Long) station[0]).stationName((String) station[1]).build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Category> getCategories() {
+        return null;
     }
 
 

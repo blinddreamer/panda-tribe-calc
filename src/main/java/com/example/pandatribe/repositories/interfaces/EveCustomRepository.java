@@ -1,5 +1,6 @@
 package com.example.pandatribe.repositories.interfaces;
 
+import com.example.pandatribe.models.market.Category;
 import com.example.pandatribe.models.results.Blueprint;
 import com.example.pandatribe.models.results.SystemName;
 import com.example.pandatribe.models.industry.blueprints.BlueprintActivity;
@@ -18,4 +19,5 @@ public interface EveCustomRepository {
     List<Blueprint> getBlueprints();
     List<Region> getRegions();
     List<Station> getStations();
+    List<Category> getCategories();
 }

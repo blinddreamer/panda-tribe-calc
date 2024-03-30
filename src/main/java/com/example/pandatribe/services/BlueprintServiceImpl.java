@@ -84,7 +84,7 @@ public class BlueprintServiceImpl implements BlueprintService {
                     .quantity(quantity* jobRuns)
                     .materialsList(materialsList)
                     .industryCosts(industryCosts)
-                    .icon(init ? helper.generateRenderLink(eveType.get().getTypeId(),size) : helper.generateIconLink(eveType.get().getTypeId(),size))
+                    .icon(eveType.get().getGroupId().equals(541) ? helper.generateRenderLink(eveType.get().getTypeId(),size) : helper.generateIconLink(eveType.get().getTypeId(),size))
                     .sellPrice(marketService
                             .getItemPrice(DEFAULT_LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId(),regionId))
                             .multiply(BigDecimal.valueOf(quantity))
