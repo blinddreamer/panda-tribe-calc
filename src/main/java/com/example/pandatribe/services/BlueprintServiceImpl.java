@@ -82,6 +82,7 @@ public class BlueprintServiceImpl implements BlueprintService {
                     .volume((Objects.nonNull(volume)? volume : eveType.get().getVolume()) * quantity *jobRuns)
                     .isCreatable(Boolean.TRUE)
                     .quantity(quantity* jobRuns)
+                    .activityId(blueprintActivity.getActivityId())
                     .materialsList(materialsList)
                     .industryCosts(industryCosts)
                     .icon(eveType.get().getGroupId().equals(541) ? helper.generateRenderLink(eveType.get().getTypeId(),size) : helper.generateIconLink(eveType.get().getTypeId(),size))

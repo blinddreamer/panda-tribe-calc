@@ -31,7 +31,8 @@ public class EveBlueprintController {
     @PostMapping("type")
     @Cacheable("cacheCalculator")
     public ResponseEntity<?> getEveType(@RequestBody BlueprintRequest blueprintRequest){
-        LOGGER.info("Request for blueprint: " + blueprintRequest);
+        LOGGER.info("REQUEST for blueprint: ");
+        jsonLogger.println(blueprintRequest);
         BlueprintResult blueprintDto = blueprintService.getBlueprintData(blueprintRequest);
         if(Objects.isNull(blueprintDto)){
             LOGGER.info("Blueprint {} not found", blueprintRequest.getBlueprintName());
@@ -44,27 +45,27 @@ public class EveBlueprintController {
     @GetMapping("systems")
     @Cacheable("systemNames")
     public ResponseEntity<List<SystemName>> getEveSystems(){
-        LOGGER.debug("Request for systems received");
+        LOGGER.debug("REQUEST for systems received");
         return ResponseEntity.ok(blueprintService.getEveSystems());
     }
     @GetMapping("blueprints")
     @Cacheable("blueprints")
     public ResponseEntity<GetBlueprintsResult> getEveBlueprints(){
-        LOGGER.debug("Request for blueprints received");
+        LOGGER.debug("REQUEST for blueprints received");
         return ResponseEntity.ok(blueprintService.getEveBlueprints());
     }
 
     @GetMapping("regions")
     @Cacheable("regions")
     public ResponseEntity<List<Region>> getEveRegions(){
-        LOGGER.debug("Request for regions received.");
+        LOGGER.debug("REQUEST for regions received.");
         return ResponseEntity.ok(blueprintService.getEveRegions());
     }
 
     @GetMapping("stations")
     @Cacheable("stations")
     public ResponseEntity<List<Station>> getEveStations(){
-        LOGGER.debug("Request for stations received.");
+        LOGGER.debug("REQUEST for stations received.");
         return ResponseEntity.ok(blueprintService.getEveStations());
     }
 }

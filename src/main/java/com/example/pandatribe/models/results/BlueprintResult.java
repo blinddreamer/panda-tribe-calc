@@ -20,4 +20,6 @@ public class BlueprintResult {
     private Double volume;
     private Boolean isCreatable;
     private BigDecimal industryCosts;
+    private Integer activityId;
+    private Double excessMaterials;
 }
