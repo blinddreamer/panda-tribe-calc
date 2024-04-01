@@ -26,7 +26,6 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -37,6 +36,7 @@ public class BlueprintServiceImpl implements BlueprintService {
     public static final String DEFAULT_SYSTEM = "Jita";
     public static final Integer DEFAULT_LOCATION_ID = 60003760;
     public static final String REACTION = "reaction";
+    public static final String ORDER_TYPE = "sell";
     public static final String MANUFACTURING = "manufacturing";
     private final MaterialService materialsService;
     private final MarketService marketService;
@@ -87,7 +87,7 @@ public class BlueprintServiceImpl implements BlueprintService {
                     .industryCosts(industryCosts)
                     .icon(eveType.get().getGroupId().equals(541) ? helper.generateRenderLink(eveType.get().getTypeId(),size) : helper.generateIconLink(eveType.get().getTypeId(),size))
                     .sellPrice(marketService
-                            .getItemPrice(DEFAULT_LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId(),regionId))
+                            .getItemSellOrderPrice(DEFAULT_LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId(),regionId, ORDER_TYPE))
                             .multiply(BigDecimal.valueOf(quantity))
                             .multiply(BigDecimal.valueOf(jobRuns)))
                     .build();

@@ -27,6 +27,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class MaterialsServiceImpl implements MaterialService {
     public static final Integer LOCATION_ID = 60003760;
+    public static final String ORDER_TYPE = "sell";
     private final EveTypesRepository eveTypesRepository;
     private final EveMaterialsRepository materialBlueprintRepository;
     private final EveCustomRepository eveCustomRepository;
@@ -50,7 +51,7 @@ public class MaterialsServiceImpl implements MaterialService {
         List<MarketPriceData> marketPriceData = marketService.getMarketPriceData();
         Double rigMultiplier = getRigMultiplier(rigBonus, security);
         for (Material material : materials) {
-            List<ItemPrice> marketItemPriceData = marketService.getItemMarketPrice(material.getBlueprintTypeId().getMaterialTypeId(),regionId);
+            List<ItemPrice> marketItemPriceData = marketService.getItemMarketPrice(material.getBlueprintTypeId().getMaterialTypeId(),regionId, ORDER_TYPE);
             Optional<EveType> eveType = eveTypesRepository.findEveTypeByTypeId(material.getBlueprintTypeId().getMaterialTypeId());
             if (eveType.isEmpty()) {
                 continue;
@@ -66,7 +67,7 @@ public class MaterialsServiceImpl implements MaterialService {
                     .quantity(matQuantity)
                     .excessMaterials(Objects.nonNull(blueprintActivity) ? Math.abs(craftQuantity*jobsCount-matQuantity) : 0)
                     .icon(helper.generateIconLink(eveType.get().getTypeId(),32))
-                    .sellPrice(marketService.getItemPrice(LOCATION_ID, marketItemPriceData).multiply(BigDecimal.valueOf(matQuantity)))
+                    .sellPrice(marketService.getItemSellOrderPrice(LOCATION_ID, marketItemPriceData).multiply(BigDecimal.valueOf(matQuantity)))
                     .volume((Objects.nonNull(volume) ? volume : eveType.get().getVolume()) * matQuantity)
                     .activityId(Optional.ofNullable(blueprintActivity).map(BlueprintActivity::getActivityId).orElse(0))
                     .adjustedPrice(marketPriceData.stream()
