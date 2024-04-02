@@ -51,7 +51,7 @@ public class Helper {
     }
 
     public RigBonus getRigBonus(Integer index, Integer building){
-        index = building > 2 ? index + 2 : index;
+        index = building > 3 ? index + 2 : index;
         return rigBonuses.get(index);
     }
     private String generateRandomCodeVerifier() {

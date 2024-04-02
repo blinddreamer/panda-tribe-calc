@@ -60,7 +60,7 @@ public class MaterialsServiceImpl implements MaterialService {
             BlueprintActivity blueprintActivity = eveCustomRepository.getBluePrintInfoByProduct(eveType.get().getTypeId());
             Integer volume = eveCustomRepository.getVolume(eveType.get().getTypeId());
             Double craftQuantity = Optional.ofNullable(blueprintActivity).map(b -> Double.parseDouble(b.getCraftQuantity().toString())).orElse(1.0);
-            Integer matQuantity = getQuantityDiscount(BigDecimal.valueOf((long) material.getQuantity() * quantity), rigBonus.getMaterialReduction() * rigMultiplier, materialEfficiency, buildingBonus.getMaterialReduction()) * blueprintCount;
+            Integer matQuantity = this.getQuantityDiscount(BigDecimal.valueOf((long) material.getQuantity() * quantity), rigBonus.getMaterialReduction() * rigMultiplier, materialEfficiency, buildingBonus.getMaterialReduction()) * blueprintCount;
             Integer jobsCount = Objects.nonNull(blueprintActivity) ? (int) Math.ceil(matQuantity / craftQuantity) : 0;
             BlueprintResult.BlueprintResultBuilder materialDto = BlueprintResult.builder()
                     .name(eveType.get().getTypeName())
