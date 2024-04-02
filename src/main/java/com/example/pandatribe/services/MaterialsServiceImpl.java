@@ -91,8 +91,8 @@ public class MaterialsServiceImpl implements MaterialService {
 
     private Integer getQuantityDiscount(BigDecimal initialQuantity, Double discountBR, Integer discountBP, Integer discountB) {
         initialQuantity = initialQuantity.subtract(initialQuantity.multiply(BigDecimal.valueOf(discountBP / 100.0)));
-        initialQuantity = initialQuantity.subtract(initialQuantity.multiply(BigDecimal.valueOf(discountBR / 100.0)));
         initialQuantity = initialQuantity.subtract(initialQuantity.multiply(BigDecimal.valueOf(discountB / 100.0)));
+        initialQuantity = initialQuantity.subtract(initialQuantity.multiply(BigDecimal.valueOf(discountBR / 100.0)));
         return initialQuantity.setScale(0, RoundingMode.CEILING).intValue();
     }
 
