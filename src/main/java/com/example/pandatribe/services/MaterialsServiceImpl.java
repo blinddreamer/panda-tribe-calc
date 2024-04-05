@@ -33,7 +33,7 @@ public class MaterialsServiceImpl implements MaterialService {
     private final EveCustomRepository eveCustomRepository;
     private final MarketService marketService;
     private final Helper helper;
-    @Value("${SKIP_REACTIONS}")
+    @Value("${REACTIONS}")
     private Boolean reactions;
 
 
@@ -74,7 +74,7 @@ public class MaterialsServiceImpl implements MaterialService {
                             .filter(m-> m.getTypeId().equals(eveType.get().getTypeId()))
                             .findFirst()
                             .map(MarketPriceData::getAdjustedPrice)
-                            .orElse(BigDecimal.ZERO).multiply(BigDecimal.valueOf(matQuantity)))
+                            .orElse(BigDecimal.ZERO).multiply(BigDecimal.valueOf(material.getQuantity())))
                     .jobsCount(jobsCount);
 
             if (Objects.isNull(blueprintActivity)) {
@@ -82,7 +82,7 @@ public class MaterialsServiceImpl implements MaterialService {
                 materialList.add(materialDto.build());
                 continue;
             }
-            Boolean skip = reactions ? blueprintActivity.getActivityId() == 11 ? true : false : false;
+            Boolean skip = reactions && blueprintActivity.getActivityId() == 11;
             materialDto.isCreatable(skip ? Boolean.FALSE : Boolean.TRUE);
             materialList.add(materialDto.build());
         }

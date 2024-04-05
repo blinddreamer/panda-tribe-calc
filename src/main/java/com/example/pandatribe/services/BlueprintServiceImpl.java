@@ -50,14 +50,14 @@ public class BlueprintServiceImpl implements BlueprintService {
     @Transactional
     public BlueprintResult getBlueprintData(BlueprintRequest blueprintRequest){
         Boolean init = Optional.ofNullable(blueprintRequest.getInit()).orElse(false);
-        Integer quantity = Optional.ofNullable(blueprintRequest.getQuantity()).orElse(1);
+        Integer runs = Optional.ofNullable(blueprintRequest.getRuns()).orElse(1);
         Integer blueprintMaterialEfficiency = Optional.ofNullable(blueprintRequest.getBlueprintMe()).orElse(0);
         Integer rigDiscount = Optional.ofNullable(blueprintRequest.getBuildingRig()).orElse(0);
         Integer buildingDiscount = Optional.ofNullable(blueprintRequest.getBuilding()).orElse(0);
         String system = Optional.ofNullable(blueprintRequest.getSystem()).filter(s -> !s.isEmpty()).orElse(DEFAULT_SYSTEM);
         Double facilityTax = Optional.ofNullable(blueprintRequest.getFacilityTax()).orElse(0.0);
         String blueprintName = blueprintRequest.getBlueprintName();
-        Integer jobRuns = Optional.ofNullable(blueprintRequest.getJobRuns()).orElse(1);
+        Integer count = Optional.ofNullable(blueprintRequest.getCount()).orElse(1);
         Integer regionId = Optional.ofNullable(blueprintRequest.getRegionId()).orElse(REGION_ID);
 
         Optional<EveType> eveType = repository.findEveTypeByTypeName(blueprintName);
@@ -73,23 +73,23 @@ public class BlueprintServiceImpl implements BlueprintService {
         }
             Integer volume = eveCustomRepository.getVolume(eveType.get().getTypeId());
             Integer  matBlueprintId = blueprintActivity.getBlueprintId();
-            List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, quantity, rigDiscount, blueprintMaterialEfficiency, buildingDiscount, systemInfo.getSecurity(), jobRuns, regionId);
+            List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, runs, rigDiscount, blueprintMaterialEfficiency, buildingDiscount, systemInfo.getSecurity(), count, regionId);
             String activity = blueprintActivity.getActivityId().equals(REACTION_ACTIVITY_ID) ? REACTION : MANUFACTURING;
-            BigDecimal industryCosts = calculateIndustryTaxes(facilityTax, systemInfo.getSystemId(), materialsList, activity, buildingDiscount);
+            BigDecimal industryCosts = calculateIndustryTaxes(facilityTax, systemInfo.getSystemId(), materialsList, activity, buildingDiscount, count);
 
             return BlueprintResult.builder()
                     .name(blueprintName)
-                    .volume((Objects.nonNull(volume)? volume : eveType.get().getVolume()) * quantity *jobRuns)
+                    .volume((Objects.nonNull(volume)? volume : eveType.get().getVolume()) * runs *count)
                     .isCreatable(Boolean.TRUE)
-                    .quantity(quantity* jobRuns)
+                    .quantity(runs* count)
                     .activityId(blueprintActivity.getActivityId())
                     .materialsList(materialsList)
                     .industryCosts(industryCosts)
                     .icon(eveType.get().getGroupId().equals(541) ? helper.generateRenderLink(eveType.get().getTypeId(),size) : helper.generateIconLink(eveType.get().getTypeId(),size))
                     .sellPrice(marketService
                             .getItemSellOrderPrice(DEFAULT_LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId(),regionId, ORDER_TYPE))
-                            .multiply(BigDecimal.valueOf(quantity))
-                            .multiply(BigDecimal.valueOf(jobRuns)))
+                            .multiply(BigDecimal.valueOf(runs))
+                            .multiply(BigDecimal.valueOf(count)))
                     .build();
 
         }
@@ -126,8 +126,8 @@ public class BlueprintServiceImpl implements BlueprintService {
         return stations;
     }
 
-    private BigDecimal calculateIndustryTaxes(Double facilityTax, Integer systemId, List<BlueprintResult> materials, String activity, Integer buildingIndex){
-        BigDecimal eiv = materials.stream().map(BlueprintResult::getAdjustedPrice).reduce(BigDecimal.ZERO,BigDecimal::add);
+    private BigDecimal calculateIndustryTaxes(Double facilityPercent, Integer systemId, List<BlueprintResult> materials, String activity, Integer buildingIndex, Integer count){
+        BigDecimal eiv =  materials.stream().map(BlueprintResult::getAdjustedPrice).reduce(BigDecimal.ZERO,BigDecimal::add);
         Integer buildingBonus = helper.getBuildingBonus(buildingIndex).getCostReduction();
         Double surcharge = 4.0;
         Double costIndex = industryService.getSystemCostIndexes().stream()
@@ -137,10 +137,12 @@ public class BlueprintServiceImpl implements BlueprintService {
                 .findFirst()
                 .map(CostIndex::getCostIndex)
                 .orElse(0.0);
-        BigDecimal price = eiv.multiply(BigDecimal.valueOf(costIndex)).setScale(0, RoundingMode.CEILING);
-        price = price.subtract(price.multiply(BigDecimal.valueOf(buildingBonus/100)));
-        price = price.add(eiv.multiply(BigDecimal.valueOf(facilityTax/100)));
-        price = price.add(eiv.multiply(BigDecimal.valueOf(surcharge/100)));
-        return price.setScale(0, RoundingMode.CEILING);
+        BigDecimal systemCost = eiv.multiply(BigDecimal.valueOf(costIndex));
+        BigDecimal buildingCostReduction = BigDecimal.valueOf(buildingBonus).divide(BigDecimal.valueOf(100),RoundingMode.CEILING).multiply(systemCost);
+        BigDecimal facilityTax = BigDecimal.valueOf(facilityPercent/100).multiply(eiv).setScale(0, RoundingMode.CEILING);
+        BigDecimal surChargeTax = BigDecimal.valueOf(surcharge/100).multiply(eiv).setScale(0,RoundingMode.CEILING);
+        BigDecimal finalPrice = (systemCost.subtract(buildingCostReduction)).add(facilityTax).add(surChargeTax);
+
+        return finalPrice.setScale(0,RoundingMode.CEILING).multiply(BigDecimal.valueOf(count));
     }
 }
