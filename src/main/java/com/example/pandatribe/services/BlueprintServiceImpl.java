@@ -73,18 +73,22 @@ public class BlueprintServiceImpl implements BlueprintService {
         }
             Integer volume = eveCustomRepository.getVolume(eveType.get().getTypeId());
             Integer  matBlueprintId = blueprintActivity.getBlueprintId();
-            List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, runs, rigDiscount, blueprintMaterialEfficiency, buildingDiscount, systemInfo.getSecurity(), count, regionId);
+            Integer craftQuantity = (int) Math.ceil((double) runs /blueprintActivity.getCraftQuantity());
+            List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, craftQuantity, rigDiscount, blueprintMaterialEfficiency, buildingDiscount, systemInfo.getSecurity(), count, regionId);
             String activity = blueprintActivity.getActivityId().equals(REACTION_ACTIVITY_ID) ? REACTION : MANUFACTURING;
             BigDecimal industryCosts = calculateIndustryTaxes(facilityTax, systemInfo.getSystemId(), materialsList, activity, buildingDiscount, count);
 
             return BlueprintResult.builder()
+                    .id(eveType.get().getTypeId())
                     .name(blueprintName)
-                    .volume((Objects.nonNull(volume)? volume : eveType.get().getVolume()) * runs *count)
+                    .volume((Objects.nonNull(volume) ? volume : eveType.get().getVolume()) * runs * count)
                     .isCreatable(Boolean.TRUE)
-                    .quantity(runs* count)
+                    .quantity(runs * count)
                     .activityId(blueprintActivity.getActivityId())
                     .materialsList(materialsList)
                     .industryCosts(industryCosts)
+                    .excessMaterials( Math.abs((double) craftQuantity-runs))
+                    .isFuel(blueprintName.contains("Fuel Block"))
                     .icon(eveType.get().getGroupId().equals(541) ? helper.generateRenderLink(eveType.get().getTypeId(),size) : helper.generateIconLink(eveType.get().getTypeId(),size))
                     .sellPrice(marketService
                             .getItemSellOrderPrice(DEFAULT_LOCATION_ID, marketService.getItemMarketPrice(eveType.get().getTypeId(),regionId, ORDER_TYPE))

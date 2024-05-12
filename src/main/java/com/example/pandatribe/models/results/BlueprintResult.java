@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @Builder
 public class BlueprintResult {
+    private Integer id;
     private String name;
     private Integer quantity;
     private Integer jobsCount;
@@ -22,4 +23,5 @@ public class BlueprintResult {
     private BigDecimal industryCosts;
     private Integer activityId;
     private Double excessMaterials;
+    private Boolean isFuel;
 }

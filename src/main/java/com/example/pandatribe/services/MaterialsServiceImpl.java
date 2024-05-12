@@ -63,18 +63,20 @@ public class MaterialsServiceImpl implements MaterialService {
             Integer matQuantity = this.getQuantityDiscount(BigDecimal.valueOf((long) material.getQuantity() * quantity), rigBonus.getMaterialReduction() * rigMultiplier, materialEfficiency, buildingBonus.getMaterialReduction()) * blueprintCount;
             Integer jobsCount = Objects.nonNull(blueprintActivity) ? (int) Math.ceil(matQuantity / craftQuantity) : 0;
             BlueprintResult.BlueprintResultBuilder materialDto = BlueprintResult.builder()
+                    .id(eveType.get().getTypeId())
                     .name(eveType.get().getTypeName())
                     .quantity(matQuantity)
                     .excessMaterials(Objects.nonNull(blueprintActivity) ? Math.abs(craftQuantity*jobsCount-matQuantity) : 0)
                     .icon(helper.generateIconLink(eveType.get().getTypeId(),32))
-                    .sellPrice(marketService.getItemSellOrderPrice(LOCATION_ID, marketItemPriceData).multiply(BigDecimal.valueOf(matQuantity)))
-                    .volume((Objects.nonNull(volume) ? volume : eveType.get().getVolume()) * matQuantity)
+                    .sellPrice(marketService.getItemSellOrderPrice(LOCATION_ID, marketItemPriceData))
+                    .volume((Objects.nonNull(volume) ? volume : eveType.get().getVolume()))
                     .activityId(Optional.ofNullable(blueprintActivity).map(BlueprintActivity::getActivityId).orElse(0))
                     .adjustedPrice(marketPriceData.stream()
                             .filter(m-> m.getTypeId().equals(eveType.get().getTypeId()))
                             .findFirst()
                             .map(MarketPriceData::getAdjustedPrice)
                             .orElse(BigDecimal.ZERO).multiply(BigDecimal.valueOf(material.getQuantity())))
+                    .isFuel(eveType.get().getTypeName().contains("Fuel Block"))
                     .jobsCount(jobsCount);
 
             if (Objects.isNull(blueprintActivity)) {
