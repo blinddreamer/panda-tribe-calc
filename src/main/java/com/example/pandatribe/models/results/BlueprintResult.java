@@ -22,6 +22,6 @@ public class BlueprintResult {
     private Boolean isCreatable;
     private BigDecimal industryCosts;
     private Integer activityId;
-    private Double excessMaterials;
+    private Double craftQuantity;
     private Boolean isFuel;
 }

@@ -60,13 +60,14 @@ public class MaterialsServiceImpl implements MaterialService {
             BlueprintActivity blueprintActivity = eveCustomRepository.getBluePrintInfoByProduct(eveType.get().getTypeId());
             Integer volume = eveCustomRepository.getVolume(eveType.get().getTypeId());
             Double craftQuantity = Optional.ofNullable(blueprintActivity).map(b -> Double.parseDouble(b.getCraftQuantity().toString())).orElse(1.0);
-            Integer matQuantity = this.getQuantityDiscount(BigDecimal.valueOf((long) material.getQuantity() * quantity), rigBonus.getMaterialReduction() * rigMultiplier, materialEfficiency, buildingBonus.getMaterialReduction()) * blueprintCount;
-            Integer jobsCount = Objects.nonNull(blueprintActivity) ? (int) Math.ceil(matQuantity / craftQuantity) : 0;
+            Integer matQuantity = material.getQuantity() == 1 ? material.getQuantity() * quantity : this.getQuantityDiscount(BigDecimal.valueOf((long) material.getQuantity() * quantity), rigBonus.getMaterialReduction() * rigMultiplier, materialEfficiency, buildingBonus.getMaterialReduction()) * blueprintCount;
+            Integer jobsCount = Objects.nonNull(blueprintActivity) ? (int) Math.ceil(matQuantity / craftQuantity) : matQuantity;
             BlueprintResult.BlueprintResultBuilder materialDto = BlueprintResult.builder()
                     .id(eveType.get().getTypeId())
                     .name(eveType.get().getTypeName())
                     .quantity(matQuantity)
-                    .excessMaterials(Objects.nonNull(blueprintActivity) ? Math.abs(craftQuantity*jobsCount-matQuantity) : 0)
+               //     .excessMaterials(Objects.nonNull(blueprintActivity) ? Math.abs(craftQuantity*jobsCount-matQuantity) : 0)
+                    .craftQuantity(craftQuantity)
                     .icon(helper.generateIconLink(eveType.get().getTypeId(),32))
                     .sellPrice(marketService.getItemSellOrderPrice(LOCATION_ID, marketItemPriceData))
                     .volume((Objects.nonNull(volume) ? volume : eveType.get().getVolume()))

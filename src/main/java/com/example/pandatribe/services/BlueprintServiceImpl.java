@@ -73,8 +73,9 @@ public class BlueprintServiceImpl implements BlueprintService {
         }
             Integer volume = eveCustomRepository.getVolume(eveType.get().getTypeId());
             Integer  matBlueprintId = blueprintActivity.getBlueprintId();
-            Integer craftQuantity = (int) Math.ceil((double) runs /blueprintActivity.getCraftQuantity());
-            List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, craftQuantity, rigDiscount, blueprintMaterialEfficiency, buildingDiscount, systemInfo.getSecurity(), count, regionId);
+            Integer craftcount = (int) Math.ceil((double) runs /blueprintActivity.getCraftQuantity());
+            Double craftQuantity = Optional.ofNullable(blueprintActivity).map(b -> Double.parseDouble(b.getCraftQuantity().toString())).orElse(1.0);
+            List<BlueprintResult> materialsList = materialsService.getMaterialsByActivity(matBlueprintId, craftcount, rigDiscount, blueprintMaterialEfficiency, buildingDiscount, systemInfo.getSecurity(), count, regionId);
             String activity = blueprintActivity.getActivityId().equals(REACTION_ACTIVITY_ID) ? REACTION : MANUFACTURING;
             BigDecimal industryCosts = calculateIndustryTaxes(facilityTax, systemInfo.getSystemId(), materialsList, activity, buildingDiscount, count);
 
@@ -87,7 +88,8 @@ public class BlueprintServiceImpl implements BlueprintService {
                     .activityId(blueprintActivity.getActivityId())
                     .materialsList(materialsList)
                     .industryCosts(industryCosts)
-                    .excessMaterials( Math.abs((double) craftQuantity-runs))
+                    //.excessMaterials( Math.abs((double) craftQuantity-runs))
+                    .craftQuantity(craftQuantity)
                     .isFuel(blueprintName.contains("Fuel Block"))
                     .icon(eveType.get().getGroupId().equals(541) ? helper.generateRenderLink(eveType.get().getTypeId(),size) : helper.generateIconLink(eveType.get().getTypeId(),size))
                     .sellPrice(marketService
